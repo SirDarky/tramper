@@ -1,11 +1,7 @@
 const mongoose = require('mongoose');
 
-const experienciaSchema = new mongoose.Schema({
+const formacaoSchema = new mongoose.Schema({
     empresa:{
-        type: String,
-        required: true
-    },
-    cargo: {
         type: String,
         required: true
     },
@@ -27,6 +23,6 @@ const experienciaSchema = new mongoose.Schema({
     }
 });
 
-const Experiencia = mongoose.model('Experiencia', experienciaSchema);
+const Formacao = mongoose.model('Formacao', formacaoSchema);
 
-module.exports = Experiencia
+module.exports = Formacao
