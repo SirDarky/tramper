@@ -13,11 +13,7 @@ router.post('/', (req, res)=>{
         res.status(201).json({ message: 'Usuario criado'});
     }).catch((error) => {
         console.log(error);
-        if (error.code === 11000 && error.keyPattern.email === 1) {
-            res.status(400).json({ code:11000, message: 'O email já está sendo usado por outro usuário. Por favor, escolha outro email.' });
-        } else {
-            res.status(500).json({ error: error });
-        }
+        res.status(500).json({ error: error });
     });
 })
 
