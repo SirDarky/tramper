@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema({
     curtidas: [{type:mongoose.Schema.Types.ObjectId, ref:'User'}],
     rejeicoes: [{type:mongoose.Schema.Types.ObjectId, ref:'User'}],
     matches: [{type:mongoose.Schema.Types.ObjectId, ref:'User'}],
+    photopaths: [{type: String}]
 });
 
 const User = mongoose.model('User', userSchema);
