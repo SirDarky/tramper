@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-
+const mensagemSchema = require('./mensagemSchema')
 
 const conversasUserSchema = new mongoose.Schema({
-    user1: {
+    user: {
         type:mongoose.Schema.Types.ObjectId,
         ref: 'User' 
     },
@@ -10,8 +10,9 @@ const conversasUserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Empresa'
     },
+    mensagens: [mensagemSchema]
 });
 
 const ConversasEmpresa = mongoose.model('ConversasEmpresa', conversasUserSchema);
 
-module.exports = conversasEmpresaSchema;
+module.exports = ConversasEmpresa;

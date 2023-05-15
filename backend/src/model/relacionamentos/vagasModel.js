@@ -33,6 +33,7 @@ const vagasSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Empresa'
     },
+    canditados:[{type: mongoose.Schema.Types.ObjectId, ref:'User'}]
 });
 
 const Vagas = mongoose.model('Vagas', vagasSchema);

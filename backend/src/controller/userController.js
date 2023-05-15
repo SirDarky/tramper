@@ -1,7 +1,11 @@
 const router = require('express').Router();
 const User = require('../model/user/userModel');
 
-//CREATE
+router.get("/teste", (req, res)=>{
+    res.status(200).json({msg: "Deu certo"})
+})
+
+//CREATEs
 router.post('/', (req, res)=>{
     const {email, senha, nome, resumo} = req.body;
     const novoUsuario = new User({
@@ -10,8 +14,9 @@ router.post('/', (req, res)=>{
         nome:nome,
         resumo:resumo
     })
-    novoUsuario.save().then((user)=>{
-        res.status(201).json({ message: 'Usuario criado'});
+    novoUsuario.save().then((usuario)=>{
+        res.status(201).json({ message: 'Usuario criado', user: usuario});
+        console.log("Usuario criado")
     }).catch((error) => {
         console.log(error);
         res.status(500).json({ error: error });
@@ -20,7 +25,7 @@ router.post('/', (req, res)=>{
 
 //UPDATE
 router.put('/', async (req, res)=>{
-    const userId = req.userId;
+    const {userId} = req.body;
     const {email, nome, resumo} = req.body;
     const updateUser = {
         email: email,
@@ -37,7 +42,7 @@ router.put('/', async (req, res)=>{
 
 //READ
 router.get('/', async (req, res)=>{
-    const userId = req.userId;
+    const {userId} = req.body;
     try{
         const usuario = await User.findById(userId).exec();
         res.status(200).json({ usuario: usuario});
