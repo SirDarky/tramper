@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const User = require('../model/user/userModel');
 
+//CREATE
 router.post('/', (req, res)=>{
     const {email, senha, nome, resumo} = req.body;
     const novoUsuario = new User({
@@ -18,7 +19,31 @@ router.post('/', (req, res)=>{
 })
 
 //UPDATE
+router.put('/', async (req, res)=>{
+    const userId = req.userId;
+    const {email, nome, resumo} = req.body;
+    const updateUser = {
+        email: email,
+        nome: nome,
+        resumo: resumo
+    }
+    try{
+        await User.findByIdAndUpdate(userId, updateUser);
+        res.status(200).json({mensagem: "Tudo certo"});
+    } catch(err){
+        res.status(500).json({error: err})
+    }
+})
 
 //READ
+router.get('/', async (req, res)=>{
+    const userId = req.userId;
+    try{
+        const usuario = await User.findById(userId).exec();
+        res.status(200).json({ usuario: usuario});
+    }catch(err){
+        res.status(500).json({error: err})
+    }
+})
 
 module.exports = router
