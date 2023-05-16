@@ -23,4 +23,6 @@ const experienciaSchema = new mongoose.Schema({
     }
 });
 
-module.exports = experienciaSchema
+const Experiencia = mongoose.model('Experiencia', experienciaSchema)
+
+module.exports = {Experiencia, experienciaSchema}

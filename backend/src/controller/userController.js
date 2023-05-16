@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const User = require('../model/user/userModel');
-const {Curso} = require('../model/user/cursoSchema')
+const {Curso} = require('../model/user/cursoSchema');
+const { Experiencia } = require('../model/user/experienciaSchema');
 
 //Teste feito
 router.get("/teste", (req, res)=>{
@@ -59,7 +60,6 @@ router.get('/', async (req, res)=>{
 //READ ALL USERS
 //Teste feito
 router.get('/allusers', async (req, res)=>{
-    const {userId} = req.body;
     try{
         const usuarios = await User.find();
         res.status(200).json({
@@ -121,6 +121,25 @@ router.put('/cursos', async(req, res)=>{
         res.status(200).json({msg: "Tudo certo"})
     } catch(err){
         res.status(500).json({ error: err })
+    }
+})
+
+//ADCIONAR AS EXPERIENCIA
+router.put('/experiencia',async(req, res)=>{
+    const {userId} = req.body;
+    try{
+        const {empresa, cargo, resumo, datainicio, datatermino} = req.body;
+        const novaExperiencia = new Experiencia({
+            empresa: empresa,
+            cargo: cargo,
+            resumo: resumo,
+            datainicio: datainicio,
+            datatermino: datatermino
+        })
+        await User.findByIdAndUpdate(userId, {$push: {experiencias: novaExperiencia}})
+        res.status(200).json({msg: "Tudo certo"})
+    } catch(err) {
+        res.status(500).json({ error: err }) 
     }
 })
 

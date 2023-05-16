@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const {cursoSchema} = require('./cursoSchema')
 const formacaoSchema = require('./formacaoSchema')
-const experienciaSchema = require('./experienciaSchema')
+const {experienciaSchema }= require('./experienciaSchema')
 
 const userSchema = new mongoose.Schema({
     email: {
