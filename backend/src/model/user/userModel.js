@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const cursoSchema = require('./cursoSchema')
+const {cursoSchema} = require('./cursoSchema')
 const formacaoSchema = require('./formacaoSchema')
 const experienciaSchema = require('./experienciaSchema')
 
@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     cursos:[cursoSchema],
-    experiencias:[formacaoSchema],
-    formacao:[experienciaSchema],
+    experiencias:[experienciaSchema],
+    formacao:[formacaoSchema],
     curtidas: [{type:mongoose.Schema.Types.ObjectId, ref:'User'}],
     rejeicoes: [{type:mongoose.Schema.Types.ObjectId, ref:'User'}],
     matches: [{type:mongoose.Schema.Types.ObjectId, ref:'User'}],

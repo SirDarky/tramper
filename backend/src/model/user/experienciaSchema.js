@@ -20,10 +20,6 @@ const experienciaSchema = new mongoose.Schema({
     datatermino: {
         type: String,
         required: true
-    },
-    user:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
     }
 });
 

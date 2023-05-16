@@ -1,12 +1,13 @@
 const router = require('express').Router();
 const User = require('../model/user/userModel');
+const {Curso} = require('../model/user/cursoSchema')
 
 //Teste feito
 router.get("/teste", (req, res)=>{
     res.status(200).json({msg: "Deu certo"})
 })
 
-//CREATES
+//CREATE
 //Teste feito
 router.post('/', (req, res)=>{
     const {email, senha, nome, resumo} = req.body;
@@ -47,7 +48,7 @@ router.put('/', async (req, res)=>{
 router.get('/', async (req, res)=>{
     const {userId} = req.body;
     try{
-        const usuario = await User.findById(userId).exec();
+        const usuario = await User.findById(userId).populate('curtidas').exec();
         res.status(200).json({ usuario: usuario});
     }catch(err){
         res.status(500).json({error: err})
@@ -90,12 +91,35 @@ router.get('/users', async (req, res)=>{
         const usuario = await User.findById(userId);
         const usuarios = await User.find({
             _id: { $nin: usuario.curtidas },
-            $and:[{_id:{$ne:userId}}]
+            $and:[
+                {_id:{$ne:usuario.rejeicoes}},
+                {_id:{$ne:usuario.matches}},
+                {_id:{$ne:userId}}
+            ]
         });
         res.status(200).json({
             users: usuarios
         });
     } catch (err) {
+        res.status(500).json({ error: err })
+    }
+})
+
+//ADICIONAR OS CURSOS
+router.put('/cursos', async(req, res)=>{
+    const {userId} = req.body;
+    try{
+        const {empresa, resumo, datainicio, datatermino, titulo} = req.body;
+        const novoCurso = new Curso({
+            empresa: empresa,
+            resumo: resumo,
+            datainicio: datainicio,
+            datatermino: datatermino,
+            titulo: titulo
+        })
+        await User.findByIdAndUpdate(userId, {$push: {cursos: novoCurso}})
+        res.status(200).json({msg: "Tudo certo"})
+    } catch(err){
         res.status(500).json({ error: err })
     }
 })
