@@ -5,9 +5,11 @@ const mensagemSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    user: String,
+    user: {
+        type: mongoose.Schema.Types.ObjectId, ref: "User"
+    },
     timestamp: { type: Date, default: Date.now }
 });
-const Message = mongoose.model('Message', messageSchema);
+const Mensagem = mongoose.model('Mensagem', mensagemSchema);
 
-module.exports = {Message, messageSchema};
+module.exports = {Mensagem, mensagemSchema};

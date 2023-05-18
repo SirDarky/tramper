@@ -10,6 +10,10 @@ const conversasUserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Empresa'
     },
+    vaga: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Vagas'
+    },
     mensagens: [mensagemSchema]
 });
 
