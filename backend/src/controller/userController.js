@@ -27,7 +27,7 @@ router.post('/', (req, res)=>{
 
 //UPDATE
 router.put('/', async (req, res)=>{
-    const {userId} = req.body;
+    const userId = req.userId;
     const {email, nome, resumo} = req.body;
     const updateUser = {
         email: email,

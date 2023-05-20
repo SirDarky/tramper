@@ -28,7 +28,7 @@ module.exports = class empresaController {
         }
     }
 
-    // PUT
+    // POST
     static async store(req, res) {
         try {
             const salt = await bcrypt.genSalt(12)
