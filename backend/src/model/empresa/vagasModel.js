@@ -5,11 +5,11 @@ const vagasSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    cargo: {
+    areaAtuacao:{
         type: String,
         required: true
     },
-    titulo: {
+    cargo: {
         type: String,
         required: true
     },

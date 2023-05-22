@@ -13,6 +13,7 @@ function authMiddleware(req, res, next) {
             return res.status(401).send({ error: 'Token inválido' });
         }
         req.userId = decoded.id;
+        req.tipoUser = decoded.tipoUser;
         return next();
     })
 }

@@ -1,28 +1,12 @@
 const router = require('express').Router();
 const User = require('../model/user/userModel');
+const Vagas = require("../model/empresa/vagasModel")
 
 //Teste feito
 router.get("/teste", (req, res)=>{
-    res.status(200).json({msg: "Deu certo"})
-})
-
-//CREATES
-//Teste feito
-router.post('/', (req, res)=>{
-    const {email, senha, nome, resumo} = req.body;
-    const novoUsuario = new User({
-        email: email,
-        senha:senha,
-        nome:nome,
-        resumo:resumo
-    })
-    novoUsuario.save().then((usuario)=>{
-        res.status(201).json({ message: 'Usuario criado', user: usuario});
-        console.log("Usuario criado")
-    }).catch((error) => {
-        console.log(error);
-        res.status(500).json({ error: error });
-    });
+    const userId = req.userId;
+    console.log(userId)
+    res.status(200).json({msg: "Deu certo", user: userId})
 })
 
 //UPDATE
@@ -45,7 +29,7 @@ router.put('/', async (req, res)=>{
 //READ
 //Teste feito
 router.get('/', async (req, res)=>{
-    const {userId} = req.body;
+    const userId = req.userId;
     try{
         const usuario = await User.findById(userId).exec();
         res.status(200).json({ usuario: usuario});
@@ -58,7 +42,7 @@ router.get('/', async (req, res)=>{
 //READ ALL USERS
 //Teste feito
 router.get('/allusers', async (req, res)=>{
-    const {userId} = req.body;
+    const userId = req.userId;
     try{
         const usuarios = await User.find();
         res.status(200).json({
@@ -72,18 +56,23 @@ router.get('/allusers', async (req, res)=>{
 //ADICIONAR CURTIDA
 //Teste feito
 router.put('/curtidas', async (req, res)=>{
-    const {userId, userIdCurtido} = req.body;
+    const userId = req.userId;
+    const {userIdCurtido} = req.body;
     try{
         const usuarioCurtido = await User.findById(userIdCurtido);
         const matchSpawn = usuarioCurtido.curtidas.find(e=> e.toString()===userId);
         if(matchSpawn){
-            await User.findByIdAndUpdate(userId, {$push: {curtidas: userIdCurtido, matches: userIdCurtido}});
+            await User.findByIdAndUpdate(userId, {$push: {matches: userIdCurtido}});
+            res.status(200).json({
+                codigo: 1000,//significa que deu match
+                msg: "Tudo certo"
+            });
         } else {
             await User.findByIdAndUpdate(userId, {$push: {curtidas: userIdCurtido}});
+            res.status(200).json({
+                msg: "Tudo certo"
+            });
         }
-        res.status(200).json({
-            msg: "Tudo certo"
-        });
     } catch(err){
         res.status(500).json({error:err})
     }
@@ -91,7 +80,8 @@ router.put('/curtidas', async (req, res)=>{
 
 //ADICIONANDO REJEIÇÃO
 router.put('/rejeicoes', async(req, res)=>{
-    const {userId, userIdRejeitado} = req.body;
+    const userId = req.userId;
+    const {userIdRejeitado} = req.body;
     try{
         await User.findByIdAndUpdate(userId, {$push: {rejeicoes: userIdRejeitado}})
         res.status(200).json({
@@ -105,7 +95,7 @@ router.put('/rejeicoes', async(req, res)=>{
 // READ ALL USERS QUE NÃO FORAM CURTIDOS OU REJEITADO OU N DERAM MATCHES
 //Teste feito
 router.get('/users', async (req, res)=>{
-    const {userId} = req.body;
+    const userId = req.userId;
     try {
         const usuario = await User.findById(userId);
         const usuarios = await User.find({
@@ -117,6 +107,52 @@ router.get('/users', async (req, res)=>{
         });
     } catch (err) {
         res.status(500).json({ error: err })
+    }
+})
+
+//BUSCA POR VAGAS
+router.get('/vagas', async (req,res)=>{
+    const userId = req.userId;
+    const {areaAtuacao}= req.body
+    try {
+        if(areaAtuacao){
+            const vagas = await Vagas.find({
+                areaAtuacao: areaAtuacao
+            }).where('canditados').nin([userId]).exec()
+            res.json(vagas)
+        }else{
+            const vagas = await Vagas.find().where('canditados').nin([userId]).exec()
+            res.json(vagas)
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: 'Erro ao buscar vagas' });
+      }
+})
+
+//Inscrição na vaga
+router.put('/vagas', async (req, res)=>{
+    const userId = req.userId;
+    const {vagaId} = req.body;
+    try {
+        await Vagas.findByIdAndUpdate(vagaId, {$push: {canditados: userId}});
+        res.status(200).json({msg: "Tudo certo"});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Erro ao buscar vagas' });
+    }
+})
+
+//Desinscrever da vaga
+router.put('/vagas/desinscrever', async(req, res)=>{
+    const userId = req.userId;
+    const {vagaId} = req.body;
+    try {
+        await Vagas.findByIdAndUpdate(vagaId, {$pull: {canditados: userId}});
+        res.status(200).json({msg: "Tudo certo"});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Erro ao buscar vagas' });
     }
 })
 
