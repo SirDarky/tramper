@@ -65,7 +65,7 @@ router.post("/loginuser", (req,res)=>{
                         tipoUser: 'User'
                     }
                     const tokenUser = jwt.sign(token, SENHA);
-                    res.status(200).json({token: tokenUser, usuario: usuario})
+                    res.status(200).json({token: tokenUser, usuario: usuario, tipoUser: 'User'})
                 } else {
                     res.status(400).json({msg: 'Email ou Senha incorreta'})
                 }
@@ -92,7 +92,7 @@ router.post("/loginempresa", (req, res)=>{
                         tipoUser: 'Empresa'
                     }
                     const tokenUser = jwt.sign(token, SENHA);
-                    res.status(200).json({token: tokenUser, usuario: empresa})
+                    res.status(200).json({token: tokenUser, usuario: empresa, tipoUser: 'Empresa'})
                 } else {
                     res.status(400).json({msg: 'Email ou Senha incorreta'})
                 }
