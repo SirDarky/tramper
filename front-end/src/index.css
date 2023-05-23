@@ -1,4 +1,5 @@
 /* GLOBAL */
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 body {
   background-image: url("./Img/31c246abf46c5c0a3bcd8cb3d07cb5b4.png");
   background-size: cover;
@@ -11,7 +12,7 @@ body {
   */
 }
 * {
-  font-family: Inter;
+  font-family: 'Inter', sans-serif;
   font-style: normal;
   font-size: 18px;
   line-height: 31px;

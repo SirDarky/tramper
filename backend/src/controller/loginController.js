@@ -53,7 +53,7 @@ router.post("/loginuser", (req,res)=>{
     User.findOne({email: email}).exec()
         .then((usuario)=>{
             if(!usuario){
-                res.status(400).json({msg: 'Usuario não encontrado'});
+                res.status(401).json({msg: 'Usuario não encontrado'});
                 return
             }
             bcrypt.compare(senha, usuario.senha, (err, result)=>{
@@ -67,7 +67,7 @@ router.post("/loginuser", (req,res)=>{
                     const tokenUser = jwt.sign(token, SENHA);
                     res.status(200).json({token: tokenUser, usuario: usuario, tipoUser: 'User'})
                 } else {
-                    res.status(400).json({msg: 'Email ou Senha incorreta'})
+                    res.status(401).json({msg: 'Email ou Senha incorreta'})
                 }
             })
         }).catch((error)=>{

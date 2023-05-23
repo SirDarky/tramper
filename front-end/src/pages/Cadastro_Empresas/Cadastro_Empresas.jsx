@@ -94,10 +94,7 @@ export const Cadastro_Empresas = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            "@media (max-width:600px)": {
-              display: "block",
-              alignItems: "stretch",
-            },
+            "@media (max-width:600px)": { mt: 5, mb: 3 },
           }}
           style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
         >
@@ -270,23 +267,14 @@ export const Cadastro_Empresas = () => {
               >
                 <ThemeProvider theme={theme}>
                   <Button
-                    sx={{
-                      fontSize: 20,
-                      backgroundColor: "rgba(20, 3, 126, 0.8)",
-                      "@media (max-width:600px)": {
-                        mt: 2,
-                      },
-                    }}
+                    style={{ fontSize: 20, backgroundColor: "rgba(20, 3, 126, 0.8)" }}
                     variant="contained"
                     startIcon={<HowToReg />}
                   >
                     REGISTRAR
                   </Button>
                   <Button
-                    sx={{
-                      fontSize: 20,
-                      backgroundColor: "rgba(20, 3, 126, 0.8)",
-                    }}
+                    style={{ fontSize: 20,backgroundColor: "rgba(20, 3, 126, 0.8)" }}
                     variant="contained"
                     startIcon={<ArrowBack />}
                   >

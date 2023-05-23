@@ -8,8 +8,12 @@ import {
   TextField,
 } from "@mui/material";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
-import React from "react";
+import React, {useState, useEffect} from 'react'
+import { Link, useNavigate  } from 'react-router-dom'
 import styled from "styled-components";
+import api from "../../services/api";
+import { useAuthContext } from "../../context/authContext";
+
 
 const WhiteIcon = styled(({ ...other }) => <span {...other} />)(
   ({ theme }) => ({
@@ -18,6 +22,34 @@ const WhiteIcon = styled(({ ...other }) => <span {...other} />)(
 );
 
 export const Login = () => {
+  const { RealizarNewLoginCliente, VerificarAntigoLogin, authentication } = useAuthContext()
+  const navigate = useNavigate()
+  const [email, setEmail] = useState('')
+  const [senha, setSenha] = useState("")
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value); // Atualiza o estado do email com o valor inserido no campo de entrada
+  };
+  const handleSenhaChange = (event) => {
+    setSenha(event.target.value); // Atualiza o estado do email com o valor inserido no campo de entrada
+  };
+  const fazerLogin = (event) => {
+    const data = {
+      email: email,
+      senha: senha
+    } // Atualiza o estado do email com o valor inserido no campo de entrada
+    api.post('/loginuser', data).then(res =>{
+      RealizarNewLoginCliente(res.data)
+    })
+  };
+  useEffect(() => {
+    VerificarAntigoLogin()
+    if(authentication){
+      navigate('/home')
+    }
+  }, [authentication])
+  
+  
   return (
     <div className="funto_login">
       <Box
@@ -79,6 +111,8 @@ export const Login = () => {
                 <TextField
                   sx={{ width: "100%" }}
                   label="Email"
+                  value={email}
+                  onChange={handleEmailChange}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start"></InputAdornment>
@@ -107,6 +141,8 @@ export const Login = () => {
                 <TextField
                   sx={{ width: "100%" }}
                   label="Senha"
+                  value={senha}
+                  onChange={handleSenhaChange}
                   type="password"
                   InputProps={{
                     startAdornment: (
@@ -117,9 +153,8 @@ export const Login = () => {
               </Box>
             </Box>
 
-            <Button sx={{ mt: 3, mb: 3, color: "black" }}>
-              ESQUECI MINHA SENHA
-            </Button>
+            <Link to={"/register"} style={{ color: "black", textDecoration: 'none', fontSize: 20 }}>Cadastro de Usuario</Link>
+            <Link to={"/register"} style={{ color: "black", textDecoration: 'none', fontSize: 20 }}>Cadastro de Empresa</Link>
 
             <Button
               sx={{ mt: 4 }}
@@ -127,9 +162,11 @@ export const Login = () => {
               variant="contained"
               endIcon={<BookmarkAddIcon />}
               style={{ color: "white", backgroundColor: "#14037e" }}
+              onClick={fazerLogin}
             >
               LOGIN
             </Button>
+
           </Card>
         </Container>
       </Box>
