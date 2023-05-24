@@ -37,7 +37,6 @@ export const Perfil_Usuario = () => {
       {
         tipoUser==="User"? <TelaPerfil/> : tipoUser==='Empresa'? <HomeEmpresa/> : ""
       }
-      <button onClick={()=>{console.log(tipoUser)}}>sim</button>
     </div>
   );
 };

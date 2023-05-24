@@ -10,6 +10,7 @@ import { Perfil_Usuario } from "./pages/Perfil_Usuario/Perfil_Usuario";
 import AuthProvider from "./context/authContext";
 import NavBar from "./components/NavBar";
 import Home from "./pages/Home/Home";
+import HomeEmpresa from "./pages/Home/HomeEmpresa";
 
 const Rotas = () => {
   return (
@@ -19,6 +20,7 @@ const Rotas = () => {
         <Routes>
           <Route path="/" element={<Login/>} />
           <Route path="/home" element={<Home />} />
+          <Route path="/homeEmpresa" element={<HomeEmpresa />} />
           <Route path="/cadastroUsuarios" element={<Cadastro_Usuarios />} />
           <Route path="/cadastroCurriculoUsuario" element={<Cadastro_Curriculo_Usuario />} />
           <Route path="/cadastroEmpresas" element={<Cadastro_Empresas />} />

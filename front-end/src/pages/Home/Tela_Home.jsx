@@ -100,9 +100,10 @@ export const Tela_Home = () => {
   const navigate = useNavigate()
   const { authentication } = useAuthContext()
   const [match, setMatch] = useState(0)
+  const [usuarioAtual, setUsuarioAtual] = useState(0)
 
   const ola = ()=>{
-    console.log(users)
+    console.log(usuarioAtual)
   }
 
   useEffect(() => {
@@ -119,11 +120,11 @@ export const Tela_Home = () => {
     <div style={{display:"flex", alignItems:"center", justifyContent:"center", height:"100vh"}}>
       { match!=0?<Match setState={setMatch}/>:""}
       {
-        users && users.length>0? users.map((user, index) => (
-          <Card usuario={user} key={index} match={setMatch}/>
-        )) : ""
+        users && users.length>0? 
+          <Card usuario={users[usuarioAtual]} match={setMatch} trocaUsuario={setUsuarioAtual} prevUsuario={usuarioAtual} key={usuarioAtual}/>: <div>
+          Você atingiu seu limite hoje, espere um pouco mais!
+        </div>
       }
-      <button onClick={ola}></button>
     </div>
   );
 };
