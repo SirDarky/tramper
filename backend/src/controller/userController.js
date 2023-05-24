@@ -1,6 +1,14 @@
 const router = require('express').Router();
 const User = require('../model/user/userModel');
-const Vagas = require("../model/empresa/vagasModel")
+const Vagas = require("../model/empresa/vagasModel");
+const { Curso } = require('../model/user/cursoSchema');
+const { Formacao } = require('../model/user/formacaoSchema');
+const { Experiencia } = require('../model/user/experienciaSchema');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+const path = require('path');
+const fs = require('fs')
+const express = require('express')
 
 //Teste feito
 router.get("/teste", (req, res)=>{
@@ -38,6 +46,47 @@ router.get('/', async (req, res)=>{
     }
 })
 
+//adicionando cursos
+router.post('/cursos', async(req, res)=>{
+    const userId = req.userId;
+    const { empresa, nome, datainicio, datatermino, resumo}= req.body;
+    const novoCurso = new Curso({
+        empresa: empresa,
+        nome: nome,
+        resumo: resumo,
+        datainicio: datainicio,
+        datatermino: datatermino
+    })
+    await User.findByIdAndUpdate(userId, {$push: {cursos: novoCurso}});
+    res.status(200).json({msg: "Curso adicionado"})
+})
+//adicionando experiencia
+router.post('/experiencia', async(req, res)=>{
+    const userId = req.userId;
+    const { empresa, cargo, datainicio, datatermino, resumo}= req.body;
+    const novoExperiencias = new Experiencia({
+        empresa: empresa,
+        cargo: cargo,
+        resumo: resumo,
+        datainicio: datainicio,
+        datatermino: datatermino
+    })
+    await User.findByIdAndUpdate(userId, {$push: {experiencias: novoExperiencias}});
+    res.status(200).json({msg: "Experiencia adicionado"})
+})
+//adiconando formacao
+router.post('/formacao', async(req, res)=>{
+    const userId = req.userId;
+    const { empresa, curso, datainicio, datatermino}= req.body;
+    const novaFormacao = new Formacao({
+        empresa: empresa,
+        curso: curso,
+        datainicio: datainicio,
+        datatermino: datatermino
+    })
+    await User.findByIdAndUpdate(userId, {$push: {formacao: novaFormacao}});
+    res.status(200).json({msg: "Formação adicionado"})
+})
 
 //READ ALL USERS
 //Teste feito
@@ -58,6 +107,7 @@ router.get('/allusers', async (req, res)=>{
 router.put('/curtidas', async (req, res)=>{
     const userId = req.userId;
     const {userIdCurtido} = req.body;
+    console.log(userIdCurtido)
     try{
         const usuarioCurtido = await User.findById(userIdCurtido);
         const matchSpawn = usuarioCurtido.curtidas.find(e=> e.toString()===userId);
@@ -100,8 +150,9 @@ router.get('/users', async (req, res)=>{
         const usuario = await User.findById(userId);
         const usuarios = await User.find({
             _id: { $nin: usuario.curtidas },
-            $and:[{_id:{$ne:userId}}]
-        });
+            $and: [{ _id: { $ne: userId } }],
+            photopaths: { $exists: true, $ne: null }
+          });
         res.status(200).json({
             users: usuarios
         });
@@ -155,6 +206,38 @@ router.put('/vagas/desinscrever', async(req, res)=>{
         res.status(500).json({ error: 'Erro ao buscar vagas' });
     }
 })
+
+router.post('/upload', upload.single('photo'), (req, res) => {
+    const userId = req.userId;
+    try {
+      // Verificar se há um arquivo enviado
+      if (!req.file) {
+        return res.status(400).json({ error: 'Nenhum arquivo enviado' });
+      }
+  
+      // Renomear o arquivo
+      const fileExtension = path.extname(req.file.originalname);
+      const newFileName = `${Date.now()}${fileExtension}`;
+      const newPath = path.join(__dirname, '../../uploads', newFileName);
+  
+      // Mover o arquivo para a pasta definida
+      fs.rename(req.file.path, newPath, (error) => {
+        if (error) {
+          console.error('Erro ao mover o arquivo:', error);
+          return res.status(500).json({ error: 'Erro ao mover o arquivo' });
+        }
+        const user = async function updatePathUser() {
+            await User.findByIdAndUpdate(userId, {photopaths: newFileName}).exec()
+        }
+        user()
+        // Responder com o caminho da foto
+        res.status(200).json({ photoPath: newPath });
+      });
+    } catch (error) {
+      console.error('Erro ao salvar a foto:', error);
+      res.status(500).json({ error: 'Erro ao salvar a foto' });
+    }
+  });
 
 //Testando filtros
 router.get('/testfiltro', async(req, res)=>{

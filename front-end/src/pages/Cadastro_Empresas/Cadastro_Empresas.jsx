@@ -1,4 +1,5 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
+import { Link, useNavigate  } from 'react-router-dom'
 import {
   Box,
   Button,
@@ -26,6 +27,9 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { useAuthContext } from "../../context/authContext";
+import api from "../../services/api";
+import ErrorMensageComponent from "../../components/erros/ErrorMensageComponent";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -63,20 +67,66 @@ function getStyles(location, selectedLocations, theme) {
 const theme = createTheme();
 
 export const Cadastro_Empresas = () => {
+  const navigate = useNavigate()
+
+  const [email, setEmail] = useState("")
+  const [senha, setSenha] = useState("")
+  const [atuacao, setAtuacao] = useState("")
+  const [nome, setNome] = useState("")
+  const [repeatSenha, setRepeatSenha] = useState("")
   const [selectedLocations, setSelectedLocations] = React.useState([]);
 
+  //erros
+  const [error, setError] = useState("")
+  const [userErro, setUserErro] = useState(false);
+
+  const novoEmail = (event)=>{setEmail(event.target.value)}
+  const novaSenha = (event)=>{setSenha(event.target.value)}
+  const novaAtuacao = (event)=>{setAtuacao(event.target.value)}
+  const novoNome = (event)=>{setNome(event.target.value)}
+  const novoRepeatSenha = (event)=>{setRepeatSenha(event.target.value)}
+
+  const { RealizarNewLoginCliente, VerificarAntigoLogin, authentication } = useAuthContext()
+
+  useEffect(() => {
+    VerificarAntigoLogin()
+    if(authentication){
+      navigate('/home')
+    }
+  }, [authentication])
+
   const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setSelectedLocations(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+    setSelectedLocations(event.target.value)
   };
+
+  const registrarEmpresa = ()=>{
+    if(senha === repeatSenha){
+      const newUser = {
+        email: email, 
+        senha: senha,
+        nome: nome,
+        areaAtuacao: atuacao,
+        local: selectedLocations
+      }
+      api.post("/registroempresa", newUser).then(res=>{
+        RealizarNewLoginCliente(res.data)
+      }).catch(err=>{
+        if(err.response.status ===400){
+          setUserErro(true)
+        }
+        if(err.response.status ===500){
+          setError(500)
+        }
+      })
+    } else {
+      console.log('eita')
+    }
+  }
 
   return (
     <div className="funto_cadastro_usuarios">
+      {userErro? <ErrorMensageComponent errorMensage={"E-mail em uso"} setState={setUserErro}tipoErro={userErro}/> :""}
+      {error===500? <ErrorMensageComponent errorMensage={"Erro do servidor"} setState={setError} tipoErro={error}/> :""}
       <Box //pai de todos
         sx={{
           display: "flex",
@@ -140,10 +190,12 @@ export const Cadastro_Empresas = () => {
 
               <TextField
                 sx={{ m: 2, width: "80%" }}
-                style={{ backgroundColor: "#dbd6fff0", padding: "" }}
-                label="NOME DA EMPRESA"
+                style={{ backgroundColor: "#5F9EA0", padding: "" }}
+                label={<span style={{ fontWeight: "bold" }}>NOME DA EMPRESA</span>}
+                value={nome}
+                onChange={novoNome}
                 InputLabelProps={{
-                  style: { color: "black" },
+                  style: { color: "#fff" },
                 }}
                 InputProps={{
                   startAdornment: (
@@ -156,10 +208,12 @@ export const Cadastro_Empresas = () => {
 
               <TextField
                 sx={{ m: 2, width: "80%" }}
-                style={{ backgroundColor: "#dbd6fff0" }}
-                label="ÁREA DE ATUAÇÃO"
+                style={{ backgroundColor: "#5F9EA0" }}
+                label={<span style={{ fontWeight: "bold" }}>ÁREA DE ATUAÇÃO</span>}
+                value={atuacao}
+                onChange={novaAtuacao}
                 InputLabelProps={{
-                  style: { color: "black" },
+                  style: { color: "#fff" },
                 }}
                 InputProps={{
                   startAdornment: (
@@ -172,18 +226,17 @@ export const Cadastro_Empresas = () => {
               {/* LOCAL */}
               <FormControl
                 sx={{ m: 2, width: "80%" }}
-                style={{ backgroundColor: "#dbd6fff0" }}
+                style={{ backgroundColor: "#5F9EA0", color:"#000" }}
                 InputLabelProps={{
-                  style: { color: "black" },
+                  style: { color: "#fff" },
                 }}
               >
                 <InputLabel id="demo-multiple-location-label">
-                  <LocationOnIcon /> LOCAL
+                  <LocationOnIcon /> <span style={{ fontWeight: "bold", color:"#FFF" }}>LOCAL</span>
                 </InputLabel>
                 <Select
                   labelId="demo-multiple-location-label"
                   id="demo-multiple-location"
-                  multiple
                   value={selectedLocations}
                   onChange={handleChange}
                   input={<OutlinedInput label="Local" />}
@@ -202,10 +255,12 @@ export const Cadastro_Empresas = () => {
               </FormControl>
               <TextField
                 sx={{ m: 2, width: "80%" }}
-                style={{ backgroundColor: "#dbd6fff0" }}
-                label="EMAIL"
+                style={{ backgroundColor: "#5F9EA0" }}
+                label={<span style={{ fontWeight: "bold" }}>EMAIL</span>}
+                value={email}
+                onChange={novoEmail}
                 InputLabelProps={{
-                  style: { color: "black" },
+                  style: { color: "#fff" },
                 }}
                 InputProps={{
                   startAdornment: (
@@ -218,10 +273,12 @@ export const Cadastro_Empresas = () => {
 
               <TextField
                 sx={{ m: 2, width: "80%" }}
-                style={{ backgroundColor: "#dbd6fff0" }}
-                label="SENHA"
+                style={{ backgroundColor: "#5F9EA0" }}
+                label={<span style={{ fontWeight: "bold" }}>SENHA</span>}
+                value={senha}
+                onChange={novaSenha}
                 InputLabelProps={{
-                  style: { color: "black" },
+                  style: { color: "#fff" },
                 }}
                 type="password"
                 InputProps={{
@@ -235,10 +292,12 @@ export const Cadastro_Empresas = () => {
 
               <TextField
                 sx={{ m: 2, width: "80%" }}
-                style={{ backgroundColor: "#dbd6fff0" }}
-                label="REPITA A SENHA"
+                style={{ backgroundColor: "#5F9EA0" }}
+                label={<span style={{ fontWeight: "bold" }}>REPITA A SENHA</span>}
+                value={repeatSenha}
+                onChange={novoRepeatSenha}
                 InputLabelProps={{
-                  style: { color: "black" },
+                  style: { color: "#fff" },
                 }}
                 type="password"
                 InputProps={{
@@ -270,15 +329,9 @@ export const Cadastro_Empresas = () => {
                     style={{ fontSize: 20, backgroundColor: "rgba(20, 3, 126, 0.8)" }}
                     variant="contained"
                     startIcon={<HowToReg />}
+                    onClick={registrarEmpresa}
                   >
                     REGISTRAR
-                  </Button>
-                  <Button
-                    style={{ fontSize: 20,backgroundColor: "rgba(20, 3, 126, 0.8)" }}
-                    variant="contained"
-                    startIcon={<ArrowBack />}
-                  >
-                    VOLTAR
                   </Button>
                 </ThemeProvider>
               </Box>

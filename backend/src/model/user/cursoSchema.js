@@ -6,6 +6,10 @@ const cursoSchema = new mongoose.Schema({
         required: true
     },
     resumo: {
+        type: String,
+        required: true
+    },
+    nome: {
         type: String
     },
     datainicio: {
@@ -15,10 +19,6 @@ const cursoSchema = new mongoose.Schema({
     datatermino: {
         type: String,
         required: true
-    },
-    titulo:{
-        type: String,
-        required:true
     }
 });
 

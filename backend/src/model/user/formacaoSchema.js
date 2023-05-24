@@ -5,10 +5,6 @@ const formacaoSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    resumo: {
-        type: String,
-        required: true
-    },
     datainicio: {
         type: String,
         required: true
@@ -17,10 +13,12 @@ const formacaoSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    user:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+    curso:{
+        type: String,
+        required: true
     }
 });
 
-module.exports = formacaoSchema
+const Formacao = mongoose.model('Formacao', formacaoSchema);
+
+module.exports = {formacaoSchema, Formacao}

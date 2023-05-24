@@ -26,6 +26,11 @@ export const Login = () => {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState("")
+  const [selectedOption, setSelectedOption] = useState('usuario');
+
+  const handleSelectChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value); // Atualiza o estado do email com o valor inserido no campo de entrada
@@ -37,10 +42,16 @@ export const Login = () => {
     const data = {
       email: email,
       senha: senha
-    } // Atualiza o estado do email com o valor inserido no campo de entrada
-    api.post('/loginuser', data).then(res =>{
-      RealizarNewLoginCliente(res.data)
-    })
+    }
+    if(selectedOption === 'usuario'){
+      api.post('/loginuser', data).then(res =>{
+        RealizarNewLoginCliente(res.data)
+      })
+    } else if(selectedOption === 'empresa'){
+      api.post('/loginempresa', data).then(res =>{
+        RealizarNewLoginCliente(res.data)
+      })
+    }
   };
   useEffect(() => {
     VerificarAntigoLogin()
@@ -92,6 +103,11 @@ export const Login = () => {
                 },
               }}
             />
+            <span>Selecione o Tipo de Login</span>
+            <select id="loginType" value={selectedOption} onChange={handleSelectChange} style={{borderRadius:"10px", padding:"2px 10px"}}>
+                <option value="usuario">Usuário</option>
+                <option value="empresa">Empresa</option>
+              </select>
             <Box
               sx={{
                 m: 2,
@@ -153,8 +169,8 @@ export const Login = () => {
               </Box>
             </Box>
 
-            <Link to={"/register"} style={{ color: "black", textDecoration: 'none', fontSize: 20 }}>Cadastro de Usuario</Link>
-            <Link to={"/register"} style={{ color: "black", textDecoration: 'none', fontSize: 20 }}>Cadastro de Empresa</Link>
+            <Link to={"/cadastroUsuarios"} style={{ color: "black", textDecoration: 'none', fontSize: 20 }}>Cadastro de Usuario</Link>
+            <Link to={"/cadastroEmpresas"} style={{ color: "black", textDecoration: 'none', fontSize: 20 }}>Cadastro de Empresa</Link>
 
             <Button
               sx={{ mt: 4 }}

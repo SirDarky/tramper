@@ -7,15 +7,14 @@ const io = require("./src/websocket/socket")
 const bodyparser = require("body-parser")
 const http = require('http');
 const server = http.createServer(app);
-app.use(express.json());
 
+app.use(express.urlencoded({extended:true}))
 
+app.use('/fotos', express.static('./uploads'));
 app.use(cors());
-// inicializa o servidor websocket
-io.attach(server);
 
+app.use(express.json());
 dbConnection()
-
 app.use(router)
 
 server.listen(3005, ()=>{

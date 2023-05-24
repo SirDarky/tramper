@@ -19,32 +19,61 @@ router.post('/registroempresa',async (req, res)=> {
             senha: senha
         })
         novaEmpresa.save().then(empresa => {
+            const token = {
+                id:empresa._id,
+                tipoUser: 'Empresa'
+            }
+            const tokenUser = jwt.sign(token, SENHA);
             res.status(201).json({
-                message: 'Empresa criada',
-                user: empresa
+                token: tokenUser, usuario:empresa, tipoUser:'Empresa'
             })
-        })
+        }).catch((error) => {
+            //console.log(error);
+            if(error.code===11000){
+                res.status(400).json({code:400})
+                return
+            }else{
+                console.log(error)
+                res.status(500).json({ error: error });
+            }
+            
+        });
     } catch (err) {
         res.status(500).json({ msg: err.message })
     }
 })
 
 router.post('/registrouser', async (req, res)=>{
+    console.log(req.body)
     const salt = await bcrypt.genSalt(12)
     const senha = await bcrypt.hash(req.body.senha, salt)
-    const {email, nome, resumo} = req.body;
+    const {email, nome, resumo, cidade, idade} = req.body;
     const novoUsuario = new User({
         email: email,
         senha:senha,
         nome:nome,
-        resumo:resumo
+        resumo:resumo,
+        idade:idade,
+        cidade:cidade
     })
     novoUsuario.save().then((usuario)=>{
-        res.status(201).json({ message: 'Usuario criado', user: usuario});
+        const token = {
+            id:usuario._id,
+            tipoUser: 'User'
+        }
+        const tokenUser = jwt.sign(token, SENHA);
+        res.status(201).json({token: tokenUser, usuario:usuario, tipoUser:'User'});
         console.log("Usuario criado")
     }).catch((error) => {
-        console.log(error);
-        res.status(500).json({ error: error });
+        //console.log(error);
+        if(error.code===11000){
+            res.status(400).json({code:400})
+            return
+        }else{
+            console.log(error)
+            res.status(500).json({ error: error });
+        }
+        
     });
 })
 

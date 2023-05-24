@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import api from "../services/api";
+import apiPhoto from "../services/apiPhoto";
 
 export const AuthContext = createContext();
 AuthContext.displayName = "UserAuth"
@@ -26,11 +27,12 @@ export function useAuthContext(){
     function RealizarNewLoginCliente(data) {
         const token = data.token;
         const user = data.tipoUser;
-        const usuario = data.nome;
+        const usuario = data.usuario.nome;
         localStorage.setItem("token", token);
         localStorage.setItem("tipouser", user);
         localStorage.setItem("usuario", usuario);
         api.defaults.headers['Authorization'] = `${token}`
+        apiPhoto.defaults.headers['Authorization'] = `${token}`
         setTokenLocal(localStorage.getItem("token"))
         setTipoUser(user)
         setAuthentication(true)
@@ -38,11 +40,12 @@ export function useAuthContext(){
     }
 
     function VerificarAntigoLogin() {
-        if(localStorage.getItem("token") && localStorage.getItem("tipouser")){
+        if(localStorage.getItem("token") && localStorage.getItem("tipouser") && localStorage.getItem("usuario")){
             const token = localStorage.getItem('token')
             const tipoUsuario = localStorage.getItem("tipouser")
             const nome = localStorage.getItem("usuario")
             api.defaults.headers['Authorization'] = `${token}`
+            apiPhoto.defaults.headers['Authorization'] = `${token}`
             setTokenLocal(token)
             setTipoUser(tipoUsuario)
             setAuthentication(true)
@@ -58,6 +61,7 @@ export function useAuthContext(){
             localStorage.removeItem("tipouser")
             localStorage.removeItem("usuario")
             api.defaults.headers.common['Authorization'] = ``
+            apiPhoto.defaults.headers.common['Authorization'] = ``
             setTipoUser("")
             setTokenLocal("")
             setUsuario("")
@@ -66,9 +70,12 @@ export function useAuthContext(){
     }
 
     function ChecarLogin() {
-        VerificarAntigoLogin()
-        const objetoLogin = {tokenLocal, tipoUser, authentication, usuario};
-        return objetoLogin;
+        if(VerificarAntigoLogin()){
+            const objetoLogin = {tokenLocal, tipoUser, authentication, usuario};
+            return objetoLogin;
+        }else{
+            return false;
+        }
     }
 
     return{

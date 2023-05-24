@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const {cursoSchema} = require('./cursoSchema')
-const formacaoSchema = require('./formacaoSchema')
+const {formacaoSchema} = require('./formacaoSchema')
 const {experienciaSchema }= require('./experienciaSchema')
 
 const userSchema = new mongoose.Schema({
@@ -17,6 +17,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    idade:{
+        type: String,
+        required: true
+    },
+    cidade:{
+        type: String,
+        required: true
+    },
     resumo: {
         type: String,
         required: true
@@ -27,7 +35,7 @@ const userSchema = new mongoose.Schema({
     curtidas: [{type:mongoose.Schema.Types.ObjectId, ref:'User'}],
     rejeicoes: [{type:mongoose.Schema.Types.ObjectId, ref:'User'}],
     matches: [{type:mongoose.Schema.Types.ObjectId, ref:'User'}],
-    photopaths: [{type: String}]
+    photopaths: {type: String}
 });
 
 const User = mongoose.model('User', userSchema);

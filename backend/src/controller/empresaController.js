@@ -132,9 +132,8 @@ router.put('/vagas', async(req, res)=>{
 //busca de todas as minhas vagas
 router.get('/vagas', async(req, res)=>{
     const empresaId = req.userId;
-    const {vagaId}= req.body;
     try {
-        const vaga = await Vagas.find({empresa: {$eq: empresaId}}).exec();
+        const vaga = await Vagas.find({empresa: {$eq: empresaId}}).populate('canditados', 'nome email resumo photopaths cursos experiencias formacao').exec();
         res.status(200).json({vagas: vaga})
     } catch (err) {
         res.status(500).json({ error: err });

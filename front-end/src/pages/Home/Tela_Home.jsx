@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from 'react-router-dom'
 import {
   Box,
   Button,
@@ -13,15 +14,10 @@ import {
 } from "@mui/material";
 import { Cancel, CheckCircle } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
-import Card from "../../components/homeComponents/Card";
-
-// array de usuarios para fazer teste
-const Login = [
-  {
-    id:100,
-    status: "R", //"R" de RH
-  }
-]
+import Card from '../../components/homeComponents/Card'
+import { useAuthContext } from "../../context/authContext";
+import api from "../../services/api";
+import Match from "../../components/homeComponents/Match";
  
 const Usuario_Usuario = [
   {
@@ -99,57 +95,35 @@ const Usuario_Usuario = [
 ];
 // ----------------------------------------------------------------
 
-// Mudar de cor dos ícones
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#f00",
-    },
-  },
-});
-// ----------------------------------------------------------------
-
-// BOTAO PARA VER O CURRICULO COMPLETO
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme }) => ({
-  transition: theme.transitions.create({
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
-// ----------------------------------------------------------------
-
 export const Tela_Home = () => {
-  // BOTAO PARA VER O CURRICULO COMPLETO
+  const [users, setUsers] = useState([])
+  const navigate = useNavigate()
+  const { authentication } = useAuthContext()
+  const [match, setMatch] = useState(0)
 
-  const [expanded, setExpanded] = React.useState(false);
+  const ola = ()=>{
+    console.log(users)
+  }
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-  // ----------------------------------------------------------------
-
-  const usuarios = Usuario_Usuario;
-  const [usuarioAtual, setUsuarioAtual] = useState(0);
-
-  const handleNextUser = () => {
-    setUsuarioAtual((prevUsuario) =>
-      prevUsuario === usuarios.length - 1 ? 0 : prevUsuario + 1
-    );
-  };
-
-  const handlePreviousUser = () => {
-    setUsuarioAtual((prevUsuario) =>
-      prevUsuario === 0 ? usuarios.length - 1 : prevUsuario - 1
-    );
-  };
-
-  const usuario = usuarios[usuarioAtual];
+  useEffect(() => {
+    if(!authentication){
+      navigate('/')
+    }
+    api.get('/user/users').then(res=>{
+        setUsers(res.data.users)
+        console.log(res.data.users)
+    })
+  }, [authentication])
 
   return (
-    <div key={usuario.id} style={{display:"flex", alignItems:"center", justifyContent:"center", height:"100vh"}}>
-      <Card usuario={Usuario_Usuario[0]}/>
+    <div style={{display:"flex", alignItems:"center", justifyContent:"center", height:"100vh"}}>
+      { match!=0?<Match setState={setMatch}/>:""}
+      {
+        users && users.length>0? users.map((user, index) => (
+          <Card usuario={user} key={index} match={setMatch}/>
+        )) : ""
+      }
+      <button onClick={ola}></button>
     </div>
   );
 };

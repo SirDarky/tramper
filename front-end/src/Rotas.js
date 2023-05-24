@@ -8,14 +8,17 @@ import { Cadastro_Empresas } from "./pages/Cadastro_Empresas/Cadastro_Empresas";
 import { Cadastro_Vaga_Empresa } from "./pages/Cadastro_Vaga_Empresa/Cadastro_Vaga_Empresa";
 import { Perfil_Usuario } from "./pages/Perfil_Usuario/Perfil_Usuario";
 import AuthProvider from "./context/authContext";
+import NavBar from "./components/NavBar";
+import Home from "./pages/Home/Home";
 
 const Rotas = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <NavBar/>
         <Routes>
           <Route path="/" element={<Login/>} />
-          <Route path="/home" element={<Tela_Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/cadastroUsuarios" element={<Cadastro_Usuarios />} />
           <Route path="/cadastroCurriculoUsuario" element={<Cadastro_Curriculo_Usuario />} />
           <Route path="/cadastroEmpresas" element={<Cadastro_Empresas />} />
