@@ -117,7 +117,7 @@ export const Tela_Home = () => {
   }, [authentication])
 
   return (
-    <div style={{display:"flex", alignItems:"center", justifyContent:"center", height:"100vh"}}>
+    <div style={{display:"flex", alignItems:"center", justifyContent:"center", height:"80vh"}}>
       { match!=0?<Match setState={setMatch}/>:""}
       {
         users && users.length>0? 

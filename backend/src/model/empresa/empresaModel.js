@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+    const mongoose = require('mongoose');
 
 const empresaSchema = new mongoose.Schema({
     nome: {
@@ -21,7 +21,8 @@ const empresaSchema = new mongoose.Schema({
     senha: {
         type: String,
         required: true
-    }
+    },
+    photopaths: {type: String}
 });
 
 const Empresa = mongoose.model('Empresa', empresaSchema);

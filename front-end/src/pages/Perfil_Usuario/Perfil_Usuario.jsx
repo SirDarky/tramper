@@ -5,6 +5,7 @@ import TelaPerfil from "../../components/perfilComponents/TelaPerfil";
 import { useAuthContext } from "../../context/authContext";
 import Home from "../Home/Home";
 import HomeEmpresa from "../Home/HomeEmpresa";
+import TelaEmpresa from "../../components/perfilComponents/TelaEmpresa";
 
 
 const locations = [
@@ -35,7 +36,7 @@ export const Perfil_Usuario = () => {
     
     <div>
       {
-        tipoUser==="User"? <TelaPerfil/> : tipoUser==='Empresa'? <HomeEmpresa/> : ""
+        tipoUser==="User"? <TelaPerfil/> : tipoUser==='Empresa'? <TelaEmpresa/> : ""
       }
     </div>
   );

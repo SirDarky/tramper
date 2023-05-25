@@ -23,7 +23,10 @@ body {
   color: aliceblue;
 }
 /* -------------------------------------------------------------------------------------------------------------------------- */
-
+#root{
+  height: 100%;
+  min-height: 100vh;
+}
 /* TELA DE CADASTRO_USUARIOS */
 .funto_cadastro_usuarios {
   background-image: url("./Img/31c246abf46c5c0a3bcd8cb3d07cb5b4.png"),

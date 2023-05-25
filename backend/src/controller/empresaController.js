@@ -2,6 +2,10 @@ const router = require('express').Router()
 const Empresa = require('../model/empresa/empresaModel')
 const Vagas = require("../model/empresa/vagasModel")
 const bcrypt = require('bcrypt')
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+const path = require('path');
+const fs = require('fs')
 
 //Teste feito
 router.get("/teste", (req, res)=>{
@@ -27,7 +31,6 @@ router.get('/myuser', async(req,res)=>{
     try {
         const empresaId =  req.userId
         const empresa = await Empresa.findById(empresaId)
-            .populate('curtidas')
             .exec()
         res.status(200).json({ empresa: empresa })
     } catch (err) {
@@ -80,9 +83,9 @@ router.post('/vagas', async(req,res)=>{
 })
 
 //delete de vagas
-router.delete('/vagas', async (req, res)=>{
+router.delete('/vagas/:vagaId', async (req, res)=>{
     const empresaId = req.userId;
-    const { vagaId } = req.body;
+    const { vagaId } = req.params;
     try {
         const vaga = await Vagas.findById(vagaId).exec();
         if (!vaga) {
@@ -151,5 +154,37 @@ router.get('/vagas/canditados', async(req, res)=>{
         res.status(500).json({ error: err });
     }
 })
+
+router.post('/upload', upload.single('photo'), (req, res) => {
+    const userId = req.userId;
+    try {
+      // Verificar se há um arquivo enviado
+      if (!req.file) {
+        return res.status(400).json({ error: 'Nenhum arquivo enviado' });
+      }
+  
+      // Renomear o arquivo
+      const fileExtension = path.extname(req.file.originalname);
+      const newFileName = `${Date.now()}${fileExtension}`;
+      const newPath = path.join(__dirname, '../../uploads', newFileName);
+  
+      // Mover o arquivo para a pasta definida
+      fs.rename(req.file.path, newPath, (error) => {
+        if (error) {
+          console.error('Erro ao mover o arquivo:', error);
+          return res.status(500).json({ error: 'Erro ao mover o arquivo' });
+        }
+        const user = async function updatePathUser() {
+            await Empresa.findByIdAndUpdate(userId, {photopaths: newFileName}).exec()
+        }
+        user()
+        // Responder com o caminho da foto
+        res.status(200).json({ photoPath: newFileName });
+      });
+    } catch (error) {
+      console.error('Erro ao salvar a foto:', error);
+      res.status(500).json({ error: 'Erro ao salvar a foto' });
+    }
+  });
 
 module.exports = router

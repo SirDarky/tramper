@@ -168,13 +168,25 @@ router.get('/vagas', async (req,res)=>{
     const {areaAtuacao}= req.body
     try {
         if(areaAtuacao){
+            const usuario = await User.findById(userId);
+            const ignoredVagas = usuario.vagaRejeitada;
             const vagas = await Vagas.find({
-                areaAtuacao: areaAtuacao
-            }).populate('empresa').where('canditados').nin([userId]).exec()
-            res.json(vagas)
+                areaAtuacao: areaAtuacao,
+                _id: { $nin: ignoredVagas },
+                'empresa.photopath': { $exists: true, $ne: null }
+            })
+            .populate('empresa')
+            .where('candidatos')
+            .nin([userId])
+            .exec();
+            const vagasFiltradas = vagas.filter(vaga => vaga.empresa.photopath);
+            res.json(vagasFiltradas);
         }else{
-            const vagas = await Vagas.find().populate('empresa').where('canditados').nin([userId]).exec()
-            res.json(vagas)
+            const usuario = await User.findById(userId);
+            const ignoredVagas = usuario.vagaRejeitada;
+            const vagas = await Vagas.find({_id: { $nin: ignoredVagas }}).populate('empresa').where('canditados').nin([userId]).exec()
+            const vagasFiltradas = vagas.filter(vaga => vaga.empresa.photopaths);
+            res.json(vagasFiltradas);
         }
     } catch (error) {
         console.log(error)

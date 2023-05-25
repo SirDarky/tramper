@@ -1,9 +1,13 @@
 import React from 'react'
 function dataAno(date) {
-    const [ano, mes] = date.split('-')
-    const nomeMes = new Date(ano, parseInt(mes) - 1).toLocaleString('pt-BR', { month: 'long' });
-    const stringFormatada = `${nomeMes}/${ano}`;
-    return stringFormatada
+    if(date==="Presente"){
+        return "Presente"
+    } else{
+        const [ano, mes] = date.split('-')
+        const nomeMes = new Date(ano, parseInt(mes) - 1).toLocaleString('pt-BR', { month: 'long' });
+        const stringFormatada = `${nomeMes}/${ano}`;
+        return stringFormatada
+    }
 }
 
 const CardExperiencia = ({experiencia}) => {

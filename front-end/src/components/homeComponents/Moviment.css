@@ -1,0 +1,10 @@
+@keyframes move-left {
+    0% { margin-left: 40px; }
+    100% { margin-left: 3px; }
+  }
+  
+  @keyframes move-right {
+    0% { margin-left: 3px; }
+    100% { margin-left: 40px; }
+  }
+  

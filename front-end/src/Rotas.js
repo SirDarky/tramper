@@ -22,9 +22,7 @@ const Rotas = () => {
           <Route path="/home" element={<Home />} />
           <Route path="/homeEmpresa" element={<HomeEmpresa />} />
           <Route path="/cadastroUsuarios" element={<Cadastro_Usuarios />} />
-          <Route path="/cadastroCurriculoUsuario" element={<Cadastro_Curriculo_Usuario />} />
           <Route path="/cadastroEmpresas" element={<Cadastro_Empresas />} />
-          <Route path="/cadastroVagaEmpresa" element={<Cadastro_Vaga_Empresa />} />
           <Route path="/perfilUsuario" element={<Perfil_Usuario/>} />
         </Routes>
       </AuthProvider>

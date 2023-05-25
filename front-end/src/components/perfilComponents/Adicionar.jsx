@@ -1,5 +1,54 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../services/api'
+import {
+    Box,
+    Button,
+    Card,
+    CardMedia,
+    InputAdornment,
+    TextField,
+    createTheme,
+  } from "@mui/material";
+  import Foto_tela_Cadastro from "../../Img/Foto_cadastro_usuario.jpg";
+  import {
+    ArrowBack,
+    Email,
+    Lock,
+    Person,
+    SensorOccupied,
+    HowToReg,
+  } from "@mui/icons-material";
+  import { ThemeProvider } from "styled-components";
+  import MenuItem from "@mui/material/MenuItem";
+  import OutlinedInput from "@mui/material/OutlinedInput";
+  import LocationOnIcon from "@mui/icons-material/LocationOn";
+  import Select from "@mui/material/Select";
+  import FormControl from "@mui/material/FormControl";
+  import InputLabel from "@mui/material/InputLabel";
+  import { areasDeAtuacao, locations } from '../../services/constantes';
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT*5 + ITEM_PADDING_TOP,
+      width: 250
+    },
+  },
+};
+
+function getStyles(location, selectedLocations, theme) {
+  return {
+    fontWeight:
+      selectedLocations.indexOf(location) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
+const theme = createTheme({});
 
 const AdicionarFormacao = ({setAdicionar, setLoading, state}) => {
     const [curso, setCurso] = useState("")
@@ -73,13 +122,33 @@ const AdicionarExperiencia = ({setAdicionar, setLoading, state}) => {
     const [dataInicio, setDataInicio] = useState()
     const [dataTermino, setDataTermino] = useState()
 
+    const [checkbox, setCheckbox] = useState(false)
+
+    const setarCheck = ()=>{
+        if(checkbox===true){
+            setCheckbox(false)
+        } else {
+            setCheckbox(true)
+        }
+    }
     function novaExperiencia() {
-        const newExp = {
-            empresa: empresa,
-            cargo: cargo,
-            resumo: resumo,
-            datainicio: dataInicio,
-            datatermino: dataTermino
+        let newExp = {}
+        if(checkbox){
+            newExp = {
+                empresa: empresa,
+                cargo: cargo,
+                resumo: resumo,
+                datainicio: dataInicio,
+                datatermino: "Presente"
+            }
+        } else{
+            newExp = {
+                empresa: empresa,
+                cargo: cargo,
+                resumo: resumo,
+                datainicio: dataInicio,
+                datatermino: dataTermino
+            }
         }
         api.post('/user/experiencia', newExp).then(res=>{
             setAdicionar('')
@@ -121,15 +190,18 @@ const AdicionarExperiencia = ({setAdicionar, setLoading, state}) => {
                         onChange={(e) => { setDataTermino(e.target.value) }}
                         min="yyyy-MM"
                         max="yyyy-MM"
+                        disabled={checkbox ? true : false}
                     />
                 </div>
+            </div>
+            <div style={{display:'flex', alignItems:"center"}} onClick={setarCheck}>
+                <input type="checkbox" checked={checkbox} style={{width:"15px", height:"15px", margin:"0"}}/>
+                <label htmlFor="" style={{marginLeft:"5px"}}>Ainda estou neste trabalho</label>
             </div>
             <button style={{width:"65px", margin:"20px 0 5px 0", background:"#14037E", color:"#fff", borderRadius:"10px", border:"0", cursor:"pointer"}} onClick={novaExperiencia} >Salvar</button>
         </div>
     )
 }
-
-
 
 const AdicionarCurso = ({setAdicionar, setLoading, state}) => {
     const [nome, setNome] = useState("")
@@ -194,4 +266,87 @@ const AdicionarCurso = ({setAdicionar, setLoading, state}) => {
     )
   }
 
-export {AdicionarFormacao, AdicionarExperiencia, AdicionarCurso}
+const AdicionarVaga = ({setAdicionar, setLoading, state, setAtualizar, atualizar}) => {
+    const [cargo, setCargo] = useState("")
+    const [selectedLocations, setSelectedLocations] = useState("");
+    const [areaAtuacao, setAreaAtuacao] = useState("Desenvolvimento de software")
+    const [salario, setSalario] = useState("")
+    const [beneficios, setBeneficios] = useState("")
+    const [requisito, setRequisito] = useState("")
+    const [descricao, setDescricao] = useState("")    
+
+    function novaVaga() {
+        setLoading(true)
+        const novaVaga = {
+            localVaga: selectedLocations,
+            areaAtuacao: areaAtuacao,
+            cargo: cargo,
+            salario: salario,
+            beneficios: beneficios,
+            requisito:requisito,
+            descricao:descricao
+        }
+        api.post('/empresa/vagas', novaVaga).then(res=>{
+            setLoading(false)
+            setAdicionar(false)
+            setAtualizar(!atualizar)
+        }).catch((err)=>{
+            console.log(err)
+            setLoading(false)
+        })
+    }
+
+    return (
+        <div style={{display:"flex", flexDirection:"column", margin:"20px 20px 20px 0", background:"rgba(0, 0, 0, 0.2)", padding:"15px", borderRadius:"20px",  width:"350px", alignItems:"center"}}>
+            <div style={{display:"flex", flexDirection:"column",  alignItems:"center"}}>
+                <span style={{width:"min-content"}}>Cargo:</span>
+                <input style={{width:"330px", paddingLeft:"10px", height:"30px"}} type="text" value={cargo} onChange={(e)=>{setCargo(e.target.value)}}/>
+                <span>Localidade</span>
+                <FormControl
+                    sx={{width: "330px", height:"30px" }}
+                    style={{ backgroundColor: "#FFF", color:"#000" }}
+                    InputLabelProps={{
+                    style: { color: "#fff" },
+                    }}
+                >
+                    <Select
+                    labelId="demo-multiple-location-label"
+                    id="demo-multiple-location"
+                    value={selectedLocations}
+                    onChange={(e)=>{setSelectedLocations(e.target.value)}}
+                    input={<OutlinedInput label="Local" />}
+                    MenuProps={MenuProps}
+                    style={{height:"30px"}}
+                    >
+                    {locations.map((location) => (
+                        <MenuItem
+                        key={location}
+                        value={location}
+                        style={getStyles(location, selectedLocations, theme)}
+                        >
+                        {location}
+                        </MenuItem>
+                    ))}
+                    </Select>
+                </FormControl>
+                <span style={{width:"150px"}}>Area de Atuação:</span>
+                <select name="" id="" style={{width:"330px", padding:"8px"}} onChange={(e)=>{setAreaAtuacao(e.target.value)}} value={areaAtuacao}>
+                    {areasDeAtuacao.map((area, index)=>(
+                        <option value={area} key={index}>{area}</option>
+                    ))}
+                </select>
+                <span style={{width:"min-content"}}>Salario:</span>
+                <input style={{width:"330px", paddingLeft:"10px", height:"30px"}} type="text" value={salario} onChange={(e)=>{setSalario(e.target.value)}}/>
+                <span style={{width:"min-content"}}>Beneficios:</span>
+                <textarea style={{width:"330px", paddingLeft:"10px", height:"100px"}} type="text" value={beneficios} onChange={(e)=>{setBeneficios(e.target.value)}}/>
+                <span style={{width:"min-content"}}>Requisitos:</span>
+                <textarea style={{width:"330px", paddingLeft:"10px", height:"100px"}} type="text" value={requisito} onChange={(e)=>{setRequisito(e.target.value)}}/>
+                <span style={{width:"min-content"}}>Descrição:</span>
+                <textarea style={{width:"330px", paddingLeft:"10px", height:"100px"}} type="text" value={descricao} onChange={(e)=>{setDescricao(e.target.value)}}/>
+            </div>
+            <button style={{width:"65px", margin:"20px 0 5px 0", background:"#14037E", color:"#fff", borderRadius:"10px", border:"0", cursor:"pointer"}} onClick={novaVaga} >Salvar</button>
+        </div>
+    )
+}
+
+export {AdicionarFormacao, AdicionarExperiencia, AdicionarCurso, AdicionarVaga}

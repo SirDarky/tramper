@@ -1,7 +1,11 @@
 import axios from "axios";
+import { linkLocal } from "./constantes";
 
 const api = axios.create({
-    baseURL:'http://localhost:3005'
+    baseURL:linkLocal,
+    headers: {
+        'Content-Type': 'application/json'
+      }
 })
 
 export default api

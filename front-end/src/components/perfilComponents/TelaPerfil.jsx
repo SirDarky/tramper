@@ -60,6 +60,7 @@ const TelaPerfil = () => {
         setLoading(true)
         api.get('/user').then(res=>{
             res.data.usuario.photopaths = "http://localhost:3005/fotos/"+res.data.usuario.photopaths;
+            console.log(res.data.usuario)
             setInfo(res.data.usuario)
         })
         setTimeout(() => {
@@ -74,11 +75,11 @@ const TelaPerfil = () => {
                 <div>
                     <div className='foto'>
                         <img src={info.photopaths} alt="" style={{width: '200px', height:"200px", objectFit: 'cover', borderRadius:"90px", marginTop:"50px"}}/>
-                        {upFoto? <PhotoComponent setState={setAtualizado} state={atualizado}/> : ""}
+                        {upFoto? <PhotoComponent setState={setAtualizado} state={atualizado} tipoUpload={"User"}/> : ""}
                         <div style={{marginTop:"30px", display:"flex", flexDirection:"column", alignItems:"center"}}>
                             <button onClick={UpFoto}><span style={{color:"#000", }}>Trocar foto</span></button>
                             <span style={{color:"#fff", fontSize:"20px"}}>{info.nome}</span>
-                            <span style={{color:"#fff", fontSize:"16px"}}>Manaus - AM</span>
+                            <span style={{color:"#fff", fontSize:"16px"}}>{info.cidade}</span>
                         </div>
                     </div>
                     <div className='perfil'>

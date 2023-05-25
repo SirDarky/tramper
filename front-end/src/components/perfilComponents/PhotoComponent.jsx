@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import apiPhoto from '../../services/apiPhoto';
 
-const PhotoComponent = ({setState, state}) => {
+const PhotoComponent = ({setState, state, tipoUpload}) => {
     const [photo, setPhoto] = useState(null);
 
     const handlePhotoChange = (event) => {
@@ -15,12 +15,21 @@ const PhotoComponent = ({setState, state}) => {
         const formData = new FormData();
         formData.append('photo', photo); // Anexa o arquivo selecionado ao objeto FormData
         
-        apiPhoto.post('/user/upload', formData).then(res => {
-          console.log(res.data);
-          setState(!state)
-        }).catch(err => {
-          console.error(err);
-        });
+        if(tipoUpload==='User'){
+          apiPhoto.post('/user/upload', formData).then(res => {
+            console.log(res.data);
+            setState(!state)
+          }).catch(err => {
+            console.error(err);
+          });
+        } else{
+          apiPhoto.post('/empresa/upload', formData).then(res => {
+            console.log(res.data);
+            setState(!state)
+          }).catch(err => {
+            console.error(err);
+          });
+        }
         
         console.log('Enviando foto:', photo);
       };
