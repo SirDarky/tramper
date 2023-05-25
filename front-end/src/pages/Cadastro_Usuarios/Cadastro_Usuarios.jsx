@@ -74,7 +74,7 @@ export const Cadastro_Usuarios = () => {
   const [bio, setBio] = useState("")
   const [nome, setNome] = useState("")
   const [repeatSenha, setRepeatSenha] = useState("")
-  const [selectedLocations, setSelectedLocations] = React.useState([]);
+  const [selectedLocations, setSelectedLocations] = useState("");
 
   //erros
   const [error, setError] = useState("")
@@ -98,25 +98,29 @@ export const Cadastro_Usuarios = () => {
 
   const registrarUsuario = ()=>{
     if(senha === repeatSenha){
-      const newUser = {
-        email: email, 
-        senha: senha,
-        nome: nome,
-        resumo: bio,
-        idade: idade,
-        cidade: selectedLocations
-      }
-      api.post("/registrouser", newUser).then(res=>{
-        console.log(2)
-        RealizarNewLoginCliente(res.data)
-        console.log("hello")
-      }).catch(err=>{
-        if(err.response.status ===400){
-          setUserErro(true)
+      if(email && idade && senha && bio && nome && repeatSenha && selectedLocations){
+        const newUser = {
+          email: email, 
+          senha: senha,
+          nome: nome,
+          resumo: bio,
+          idade: idade,
+          cidade: selectedLocations
         }
-      })
+        api.post("/registrouser", newUser).then(res=>{
+          console.log(2)
+          RealizarNewLoginCliente(res.data)
+          console.log("hello")
+        }).catch(err=>{
+          if(err.response.status ===400){
+            setUserErro(true)
+          }
+        })
+      }else{
+        alert('Complete os campos')
+      }
     } else {
-      console.log('eita')
+      alert("Senhas não compativeis")
     }
   }
 

@@ -74,7 +74,7 @@ export const Cadastro_Empresas = () => {
   const [atuacao, setAtuacao] = useState("")
   const [nome, setNome] = useState("")
   const [repeatSenha, setRepeatSenha] = useState("")
-  const [selectedLocations, setSelectedLocations] = React.useState([]);
+  const [selectedLocations, setSelectedLocations] = useState("");
 
   //erros
   const [error, setError] = useState("")
@@ -101,25 +101,29 @@ export const Cadastro_Empresas = () => {
 
   const registrarEmpresa = ()=>{
     if(senha === repeatSenha){
-      const newUser = {
-        email: email, 
-        senha: senha,
-        nome: nome,
-        areaAtuacao: atuacao,
-        local: selectedLocations
+      if(email && senha && atuacao && nome && selectedLocations != []){
+        const newUser = {
+          email: email, 
+          senha: senha,
+          nome: nome,
+          areaAtuacao: atuacao,
+          local: selectedLocations
+        }
+        api.post("/registroempresa", newUser).then(res=>{
+          RealizarNewLoginCliente(res.data)
+        }).catch(err=>{
+          if(err.response.status ===400){
+            setUserErro(true)
+          }
+          if(err.response.status ===500){
+            setError(500)
+          }
+        })
+      } else {
+        alert("Complete os campos")
       }
-      api.post("/registroempresa", newUser).then(res=>{
-        RealizarNewLoginCliente(res.data)
-      }).catch(err=>{
-        if(err.response.status ===400){
-          setUserErro(true)
-        }
-        if(err.response.status ===500){
-          setError(500)
-        }
-      })
     } else {
-      console.log('eita')
+      alert('As senhas não são compativeis')
     }
   }
 

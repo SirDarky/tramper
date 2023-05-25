@@ -46,34 +46,39 @@ export const Login = () => {
   };
   const fazerLogin = (event) => {
     setLoading(true)
-    const data = {
-      email: email,
-      senha: senha
-    }
-    if(selectedOption === 'usuario'){
-      api.post('/loginuser', data).then(res =>{
-        setLoading(false)
-        RealizarNewLoginCliente(res.data)
-      }).catch(err=>{
-        if(err.response.status===401){
+    if(email && senha){
+      const data = {
+        email: email,
+        senha: senha
+      }
+      if(selectedOption === 'usuario'){
+        api.post('/loginuser', data).then(res =>{
           setLoading(false)
-          setErromsg(401)
-        }
-        setLoading(false)
-      })
-    } else if(selectedOption === 'empresa'){
-      api.post('/loginempresa', data).then(res =>{
-        setLoading(false)
-        RealizarNewLoginCliente(res.data)
-      }).catch(err=>{
-        if(err.response.status===401){
+          RealizarNewLoginCliente(res.data)
+        }).catch(err=>{
+          if(err.response.status===401){
+            setLoading(false)
+            setErromsg(401)
+          }
           setLoading(false)
-          setErromsg(401)
-        }
-        setLoading(false)
-      })
+        })
+      } else if(selectedOption === 'empresa'){
+        api.post('/loginempresa', data).then(res =>{
+          setLoading(false)
+          RealizarNewLoginCliente(res.data)
+        }).catch(err=>{
+          if(err.response.status===401){
+            setLoading(false)
+            setErromsg(401)
+          }
+          setLoading(false)
+        })
+      }
+    } else{
+      alert("Complete os campos")
     }
   };
+  
   useEffect(() => {
     VerificarAntigoLogin()
     if(authentication){

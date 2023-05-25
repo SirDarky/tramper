@@ -58,23 +58,28 @@ const AdicionarFormacao = ({setAdicionar, setLoading, state}) => {
 
     function novoFormacao() {
         setLoading(true)
-        const newFormacao = {
-            empresa: empresa,
-            datainicio: dataInicio,
-            datatermino: dataTermino,
-            curso: curso
+        if(curso && empresa && dataInicio && dataTermino){
+            const newFormacao = {
+                empresa: empresa,
+                datainicio: dataInicio,
+                datatermino: dataTermino,
+                curso: curso
+            }
+            api.post('/user/formacao', newFormacao).then(res=>{
+                setTimeout(() => {
+                    setAdicionar('')
+                    setLoading(false)
+                }, 2000);
+            }).catch((err)=>{
+                setTimeout(() => {
+                    setAdicionar('')
+                    setLoading(false)
+                }, 2000);
+            })
+        } else {
+            alert("Complete os campos")
+            setLoading(false)
         }
-        api.post('/user/formacao', newFormacao).then(res=>{
-            setTimeout(() => {
-                setAdicionar('')
-                setLoading(!state)
-            }, 2000);
-        }).catch((err)=>{
-            setTimeout(() => {
-                setAdicionar('')
-                setLoading(!state)
-            }, 2000);
-        })
     }
     
     return (
@@ -132,31 +137,29 @@ const AdicionarExperiencia = ({setAdicionar, setLoading, state}) => {
         }
     }
     function novaExperiencia() {
-        let newExp = {}
+        setLoading(true)
         if(checkbox){
-            newExp = {
-                empresa: empresa,
-                cargo: cargo,
-                resumo: resumo,
-                datainicio: dataInicio,
-                datatermino: "Presente"
-            }
-        } else{
-            newExp = {
+            setDataTermino("Presente")
+        }
+        if(cargo && resumo && dataInicio && dataTermino){
+            let newExp = {
                 empresa: empresa,
                 cargo: cargo,
                 resumo: resumo,
                 datainicio: dataInicio,
                 datatermino: dataTermino
             }
+            api.post('/user/experiencia', newExp).then(res=>{
+                setAdicionar('')
+                setLoading(false)
+            }).catch((err)=>{
+                console.log(err)
+                setLoading(false)
+            })
+        } else{
+            alert("Complete os campos")
+            setLoading(false)
         }
-        api.post('/user/experiencia', newExp).then(res=>{
-            setAdicionar('')
-            setLoading(!state)
-        }).catch((err)=>{
-            console.log(err)
-            setLoading(!state)
-        })
     }
     
     return (
@@ -211,20 +214,26 @@ const AdicionarCurso = ({setAdicionar, setLoading, state}) => {
     const [dataTermino, setDataTermino] = useState()
 
     function novoCurso() {
-        const newCurso = {
-            empresa: empresa,
-            nome: nome,
-            resumo: resumo,
-            datainicio: dataInicio,
-            datatermino: dataTermino
+        setLoading(true)
+        if(nome && empresa && resumo && dataInicio && dataTermino){
+            const newCurso = {
+                empresa: empresa,
+                nome: nome,
+                resumo: resumo,
+                datainicio: dataInicio,
+                datatermino: dataTermino
+            }
+            api.post('/user/cursos', newCurso).then(res=>{
+                setAdicionar('')
+                setLoading(false)
+            }).catch((err)=>{
+                console.log(err)
+                setLoading(false)
+            })
+        } else {
+            alert("Complete os campos")
+            setLoading(false)
         }
-        api.post('/user/cursos', newCurso).then(res=>{
-            setAdicionar('')
-            setLoading(!state)
-        }).catch((err)=>{
-            console.log(err)
-            setLoading(!state)
-        })
     }
     
     return (
@@ -277,23 +286,28 @@ const AdicionarVaga = ({setAdicionar, setLoading, state, setAtualizar, atualizar
 
     function novaVaga() {
         setLoading(true)
-        const novaVaga = {
-            localVaga: selectedLocations,
-            areaAtuacao: areaAtuacao,
-            cargo: cargo,
-            salario: salario,
-            beneficios: beneficios,
-            requisito:requisito,
-            descricao:descricao
+        if(cargo && selectedLocations && areaAtuacao && salario && beneficios && requisito && descricao){
+            const novaVaga = {
+                localVaga: selectedLocations,
+                areaAtuacao: areaAtuacao,
+                cargo: cargo,
+                salario: salario,
+                beneficios: beneficios,
+                requisito:requisito,
+                descricao:descricao
+            }
+            api.post('/empresa/vagas', novaVaga).then(res=>{
+                setLoading(false)
+                setAdicionar(false)
+                setAtualizar(!atualizar)
+            }).catch((err)=>{
+                console.log(err)
+                setLoading(false)
+            })
+        } else {
+            alert("Complete os campos")
+            setLoading(false)
         }
-        api.post('/empresa/vagas', novaVaga).then(res=>{
-            setLoading(false)
-            setAdicionar(false)
-            setAtualizar(!atualizar)
-        }).catch((err)=>{
-            console.log(err)
-            setLoading(false)
-        })
     }
 
     return (
