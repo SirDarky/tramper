@@ -1,0 +1,12 @@
+
+.botao{
+    background:rgba(0, 0, 0, 0);
+    border:0;
+}
+@media (max-width: 768px){
+    .botao{
+        background:rgba(0, 0, 0, 0);
+        border:0;
+        margin-top:50px;
+    }
+}

@@ -2,6 +2,17 @@ import React from 'react'
 import fotoDescription from './fotoDescription.css'
 
 const Description = ({nome, idade, bio, cidade}) => {
+
+  const truncateDescription = (description, maxLength) => {
+    const words = description.split(' ');
+    if (words.length > maxLength) {
+      const truncatedWords = words.slice(0, maxLength);
+      return truncatedWords.join(' ') + '...';
+    }
+    return description;
+  };
+
+  const truncatedDescription = truncateDescription(bio, 20);
   return (
     <div className='description'>
       <div>
@@ -12,7 +23,7 @@ const Description = ({nome, idade, bio, cidade}) => {
           </div>
           <div className='font' style={{paddingRight:"20px", fontSize:"16px", color:"#F2DFDF", marginTop:"20px"}}>{cidade}</div>
         </div>
-        <div className='font' style={{paddingLeft:"20px", fontSize:"24px", color:"#FCFCFC"}}>{bio}</div>
+        <div className='fontdescription' style={{paddingLeft:"20px", fontSize:"24px", color:"#FCFCFC"}}>{bio}</div>
       </div>
     </div>
   )

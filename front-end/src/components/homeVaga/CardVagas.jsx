@@ -7,6 +7,7 @@ import IconeLike from '../../icons/icone-like.svg'
 import IconeDislike from '../../icons/icone-dislike.svg'
 import DescriptionVaga from './DescriptionVaga';
 import CardCSS from '../homeComponents/Card.css'
+import ButtonCss from './Button.css'
 
 const CardVagas = ({ vaga, trocaVaga, prevVaga }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -47,6 +48,7 @@ const CardVagas = ({ vaga, trocaVaga, prevVaga }) => {
     console.log('Enviando dislike para o usuário:', vaga._id);
   };
 
+  
   if(!vaga){
     return(
       <div>
@@ -59,8 +61,8 @@ const CardVagas = ({ vaga, trocaVaga, prevVaga }) => {
         <Foto img={vaga.empresa.photopaths} />
         <DescriptionVaga vaga={vaga} />
         <div style={{ display: "flex", justifyContent: "space-between", width: "100%", marginTop: "auto" }}>
-          <button style={{background:"rgba(0, 0, 0, 0)", border:"0"}} onClick={handleDislike}><img onMouseEnter={handleHoverDislike} onMouseLeave={handleHoverOutDislike} src={IconeDislike} style={{ height: isHoveredDislike ? "115px": "100px", width:isHoveredDislike ? "115px": "100px", position:"absolute", margin:"-60px 0 0 -5px",cursor:"pointer", transition:"all 0.3s ease"}}/></button>
-          <button style={{background:"rgba(0, 0, 0, 0)", border:"0"}} onClick={handleLike}><img onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={IconeLike} style={{height: isHovered ? "130px": "110px", width:isHovered ? "130px": "110px", position:"absolute", margin:"-67px 0 0 -90px", cursor:"pointer", transition:"all 0.3s ease"}}/></button>
+          <button className='botao' onClick={handleDislike}><img onMouseEnter={handleHoverDislike} onMouseLeave={handleHoverOutDislike} src={IconeDislike} style={{ height: isHoveredDislike ? "115px": "100px", width:isHoveredDislike ? "115px": "100px", position:"absolute", margin:"-60px 0 0 -5px",cursor:"pointer", transition:"all 0.3s ease"}}/></button>
+          <button className='botao' onClick={handleLike}><img onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={IconeLike} style={{height: isHovered ? "130px": "110px", width:isHovered ? "130px": "110px", position:"absolute", margin:"-67px 0 0 -90px", cursor:"pointer", transition:"all 0.3s ease"}}/></button>
         </div>
       </div>
     );
