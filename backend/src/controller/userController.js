@@ -29,8 +29,9 @@ router.put('/', async (req, res)=>{
     try{
         await User.findByIdAndUpdate(userId, updateUser);
         res.status(200).json({mensagem: "Tudo certo"});
-    } catch(err){
-        res.status(500).json({error: err})
+    } catch(error){
+        console.log(error)
+        es.status(500).json({error: error})
     }
 })
 
@@ -41,51 +42,67 @@ router.get('/', async (req, res)=>{
     try{
         const usuario = await User.findById(userId).exec();
         res.status(200).json({ usuario: usuario});
-    }catch(err){
-        res.status(500).json({error: err})
+    }catch(error){
+        console.log(error)
+        es.status(500).json({error: error})
     }
 })
 
 //adicionando cursos
 router.post('/cursos', async(req, res)=>{
     const userId = req.userId;
-    const { empresa, nome, datainicio, datatermino, resumo}= req.body;
-    const novoCurso = new Curso({
-        empresa: empresa,
-        nome: nome,
-        resumo: resumo,
-        datainicio: datainicio,
-        datatermino: datatermino
-    })
-    await User.findByIdAndUpdate(userId, {$push: {cursos: novoCurso}});
-    res.status(200).json({msg: "Curso adicionado"})
+    try {
+        const { empresa, nome, datainicio, datatermino, resumo}= req.body;
+        const novoCurso = new Curso({
+            empresa: empresa,
+            nome: nome,
+            resumo: resumo,
+            datainicio: datainicio,
+            datatermino: datatermino
+        })
+        await User.findByIdAndUpdate(userId, {$push: {cursos: novoCurso}});
+        res.status(200).json({msg: "Curso adicionado"})
+    } catch (error) {
+        console.log(error)
+        es.status(500).json({error: error})
+    }
 })
 //adicionando experiencia
 router.post('/experiencia', async(req, res)=>{
     const userId = req.userId;
-    const { empresa, cargo, datainicio, datatermino, resumo}= req.body;
-    const novoExperiencias = new Experiencia({
-        empresa: empresa,
-        cargo: cargo,
-        resumo: resumo,
-        datainicio: datainicio,
-        datatermino: datatermino
-    })
-    await User.findByIdAndUpdate(userId, {$push: {experiencias: novoExperiencias}});
-    res.status(200).json({msg: "Experiencia adicionado"})
+    try {
+        const { empresa, cargo, datainicio, datatermino, resumo}= req.body;
+        const novoExperiencias = new Experiencia({
+            empresa: empresa,
+            cargo: cargo,
+            resumo: resumo,
+            datainicio: datainicio,
+            datatermino: datatermino
+        })
+        await User.findByIdAndUpdate(userId, {$push: {experiencias: novoExperiencias}});
+        res.status(200).json({msg: "Experiencia adicionado"})
+    } catch (error) {
+        console.log(error)
+        es.status(500).json({error: error})
+    }
 })
 //adiconando formacao
 router.post('/formacao', async(req, res)=>{
     const userId = req.userId;
-    const { empresa, curso, datainicio, datatermino}= req.body;
-    const novaFormacao = new Formacao({
-        empresa: empresa,
-        curso: curso,
-        datainicio: datainicio,
-        datatermino: datatermino
-    })
-    await User.findByIdAndUpdate(userId, {$push: {formacao: novaFormacao}});
-    res.status(200).json({msg: "Formação adicionado"})
+    try {
+        const { empresa, curso, datainicio, datatermino}= req.body;
+        const novaFormacao = new Formacao({
+            empresa: empresa,
+            curso: curso,
+            datainicio: datainicio,
+            datatermino: datatermino
+        })
+        await User.findByIdAndUpdate(userId, {$push: {formacao: novaFormacao}});
+        res.status(200).json({msg: "Formação adicionado"})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error:error})
+    }
 })
 
 //READ ALL USERS
@@ -98,6 +115,7 @@ router.get('/allusers', async (req, res)=>{
             users: usuarios
         });
     } catch(err){
+        console.log(err)
         res.status(500).json({error:err})
     }
 })
@@ -124,6 +142,7 @@ router.put('/curtidas', async (req, res)=>{
             });
         }
     } catch(err){
+        console.log(err)
         res.status(500).json({error:err})
     }
 })
@@ -138,6 +157,7 @@ router.put('/rejeicoes', async(req, res)=>{
             msg: "Tudo certo"
         });
     }catch(err){
+        console.log(err)
         res.status(500).json({error:err})
     }
 })
@@ -158,6 +178,7 @@ router.get('/users', async (req, res)=>{
             users: usuarios
         });
     } catch (err) {
+        console.log(err)
         res.status(500).json({ error: err })
     }
 })
@@ -214,6 +235,7 @@ router.put('/vagas/dislike', async (req, res)=>{
         await User.findByIdAndUpdate(userId, {$push: {vagaRejeitada: vagaId}});
         res.status(200).json({msg: 'Tudo certo'})
     } catch (error) {
+        console.log(error)
         res.status(500).json({ error: 'Erro ao dar dislike vagas'});
     }
 })

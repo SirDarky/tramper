@@ -39,47 +39,54 @@ router.post('/registroempresa',async (req, res)=> {
             
         });
     } catch (err) {
+        console.log(error)
         res.status(500).json({ msg: err.message })
     }
 })
 
 router.post('/registrouser', async (req, res)=>{
     console.log(req.body)
-    const salt = await bcrypt.genSalt(12)
-    const senha = await bcrypt.hash(req.body.senha, salt)
-    const {email, nome, resumo, cidade, idade} = req.body;
-    const novoUsuario = new User({
-        email: email,
-        senha:senha,
-        nome:nome,
-        resumo:resumo,
-        idade:idade,
-        cidade:cidade
-    })
-    novoUsuario.save().then((usuario)=>{
-        const token = {
-            id:usuario._id,
-            tipoUser: 'User'
-        }
-        const tokenUser = jwt.sign(token, SENHA);
-        res.status(201).json({token: tokenUser, usuario:usuario, tipoUser:'User'});
-        console.log("Usuario criado")
-    }).catch((error) => {
-        //console.log(error);
-        if(error.code===11000){
-            res.status(400).json({code:400})
-            return
-        }else{
-            console.log(error)
-            res.status(500).json({ error: error });
-        }
-        
-    });
+    try {
+        const salt = await bcrypt.genSalt(12)
+        const senha = await bcrypt.hash(req.body.senha, salt)
+        const {email, nome, resumo, cidade, idade} = req.body;
+        const novoUsuario = new User({
+            email: email,
+            senha:senha,
+            nome:nome,
+            resumo:resumo,
+            idade:idade,
+            cidade:cidade
+        })
+        novoUsuario.save().then((usuario)=>{
+            const token = {
+                id:usuario._id,
+                tipoUser: 'User'
+            }
+            const tokenUser = jwt.sign(token, SENHA);
+            res.status(201).json({token: tokenUser, usuario:usuario, tipoUser:'User'});
+            console.log("Usuario criado")
+        }).catch((error) => {
+            //console.log(error);
+            if(error.code===11000){
+                res.status(400).json({code:400})
+                return
+            }else{
+                console.log(error)
+                res.status(500).json({ error: error });
+            }
+            
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: error });
+    }
 })
 
 router.post("/loginuser", (req,res)=>{
     const {email, senha} = req.body;
-    User.findOne({email: email}).exec()
+    try {
+        User.findOne({email: email}).exec()
         .then((usuario)=>{
             if(!usuario){
                 res.status(401).json({msg: 'Usuario não encontrado'});
@@ -102,6 +109,10 @@ router.post("/loginuser", (req,res)=>{
         }).catch((error)=>{
             res.status(500).json({ error: error });
         })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: error });
+    }
 })
 
 router.post("/loginempresa", (req, res)=>{
