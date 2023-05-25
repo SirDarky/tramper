@@ -1,5 +1,5 @@
-const linkLocal = "http://157.230.227.133:3005"
-const linkPhoto = "http://157.230.227.133:3005/fotos/"
+const linkLocal = "http://157.230.227.133:3006/"
+const linkPhoto = "http://157.230.227.133:3006/fotos/"
 const areasDeAtuacao = [
     "Desenvolvimento de software",
     "Marketing Digital",
