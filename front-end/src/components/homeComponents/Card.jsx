@@ -60,7 +60,7 @@ const Card = ({ usuario, match, trocaUsuario, prevUsuario }) => {
     )
   } else {
     return (
-      <div style={{ justifyContent: "center", alignItems: "center", flexDirection: "column", borderRadius: "10px", boxShadow: "10px 4px 7px rgba(0, 0, 0, 0.4)", width: "500px", height: '670px', margin: "0 auto" }}>
+      <div style={{ justifyContent: "center", alignItems: "center", flexDirection: "column", borderRadius: "10px", boxShadow: "10px 4px 7px rgba(0, 0, 0, 0.4)", width: "500px", height: '680px', margin: "0 auto" }}>
         <Foto img={usuario.photopaths} />
         <Description nome={usuario.nome} idade={usuario.idade} bio={usuario.resumo} cidade={usuario.cidade} />
         <div style={{ display: "flex", justifyContent: "space-between", width: "100%", marginTop: "auto" }}>
