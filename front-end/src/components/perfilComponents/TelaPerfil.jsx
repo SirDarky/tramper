@@ -6,6 +6,7 @@ import api from '../../services/api'
 import LoadingComponent from '../LoadingComponent'
 import { useAuthContext } from '../../context/authContext'
 import PhotoComponent from './PhotoComponent'
+import { linkPhoto } from '../../services/constantes'
 
 const TelaPerfil = () => {
     const [adicionar, setAdicionar] = useState("")
@@ -59,7 +60,7 @@ const TelaPerfil = () => {
     useEffect(() => {
         setLoading(true)
         api.get('/user').then(res=>{
-            res.data.usuario.photopaths = "http://localhost:3005/fotos/"+res.data.usuario.photopaths;
+            res.data.usuario.photopaths = linkPhoto+res.data.usuario.photopaths;
             console.log(res.data.usuario)
             setInfo(res.data.usuario)
         })
