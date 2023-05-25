@@ -5,7 +5,7 @@ import fotoDescription from './fotoDescription.css'
 const Foto = ({img}) => {
   const imagem = linkPhoto+img
   return (
-    <div className='foto'>
+    <div className='fotos'>
       <img src={imagem} alt="" style={{width: '100%', height: '100%', objectFit: 'cover', borderTopLeftRadius:"20px", borderTopRightRadius:"20px", maxWidth:"600px"}}/>
     </div>
   )

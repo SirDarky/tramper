@@ -106,10 +106,11 @@ router.post("/loginuser", (req,res)=>{
 
 router.post("/loginempresa", (req, res)=>{
     const {email, senha} = req.body;
-    Empresa.findOne({email: email}).exec()
+    try {
+        Empresa.findOne({email: email}).exec()
         .then((empresa)=>{
             if(!empresa){
-                res.status(400).json({msg: 'Usuario não encontrado'});
+                res.status(401).json({msg: 'Usuario não encontrado'});
                 return
             }
             bcrypt.compare(senha, empresa.senha, (err, result)=>{
@@ -126,7 +127,11 @@ router.post("/loginempresa", (req, res)=>{
                     res.status(400).json({msg: 'Email ou Senha incorreta'})
                 }
             })
-        })
+    })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error:"erro"})
+    }
 })
 
 module.exports = router

@@ -1,7 +1,8 @@
-.foto{
+.fotos{
     display: flex;
     align-items: center;
     height: 400px;
+    width: 500px;
     margin-bottom: -15px;
 }
 
@@ -30,8 +31,9 @@
 }
 
 @media (max-width: 768px){
-    .foto{
+    .fotos{
         height: 280px;
+        width: 300px;
     }
 
     .description{

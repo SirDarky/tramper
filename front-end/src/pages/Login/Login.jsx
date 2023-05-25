@@ -13,6 +13,8 @@ import { Link, useNavigate  } from 'react-router-dom'
 import styled from "styled-components";
 import api from "../../services/api";
 import { useAuthContext } from "../../context/authContext";
+import ErrorMensageComponent from "../../components/erros/ErrorMensageComponent";
+import LoadingComponent from "../../components/LoadingComponent";
 
 
 const WhiteIcon = styled(({ ...other }) => <span {...other} />)(
@@ -28,6 +30,10 @@ export const Login = () => {
   const [senha, setSenha] = useState("")
   const [selectedOption, setSelectedOption] = useState('usuario');
 
+  const [loading, setLoading] = useState(false)
+  
+  const [erromsg, setErromsg] = useState()
+
   const handleSelectChange = (e) => {
     setSelectedOption(e.target.value);
   };
@@ -39,17 +45,32 @@ export const Login = () => {
     setSenha(event.target.value); // Atualiza o estado do email com o valor inserido no campo de entrada
   };
   const fazerLogin = (event) => {
+    setLoading(true)
     const data = {
       email: email,
       senha: senha
     }
     if(selectedOption === 'usuario'){
       api.post('/loginuser', data).then(res =>{
+        setLoading(false)
         RealizarNewLoginCliente(res.data)
+      }).catch(err=>{
+        if(err.response.status===401){
+          setLoading(false)
+          setErromsg(401)
+        }
+        setLoading(false)
       })
     } else if(selectedOption === 'empresa'){
       api.post('/loginempresa', data).then(res =>{
+        setLoading(false)
         RealizarNewLoginCliente(res.data)
+      }).catch(err=>{
+        if(err.response.status===401){
+          setLoading(false)
+          setErromsg(401)
+        }
+        setLoading(false)
       })
     }
   };
@@ -67,6 +88,8 @@ export const Login = () => {
   
   return (
     <div className="funto_login">
+      {erromsg? <ErrorMensageComponent errorMensage={"Email ou Senha invalida"} setState={setErromsg} tipoErro={erromsg} />:""}
+      {loading? <LoadingComponent /> : ""}
       <Box
         className="Filtro"
         sx={{
