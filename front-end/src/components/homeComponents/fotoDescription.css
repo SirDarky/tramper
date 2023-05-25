@@ -1,0 +1,44 @@
+.foto{
+    display: flex;
+    align-items: center;
+    height: 400px;
+    margin-bottom: -15px;
+}
+
+.description{
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+    width: 100%;
+    background:linear-gradient(to top, #4588A5, #332264)
+}
+
+.nome{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 20px;
+    align-content: center;
+    padding-bottom: 5px;
+}
+
+.nome>div{
+    margin-right: 10px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #FCFCFC;
+}
+
+@media (max-width: 768px){
+    .foto{
+        height: 280px;
+    }
+
+    .description{
+        height: 225px;
+    }
+
+    .font{
+        font-size: 18px !important;
+    }
+}
