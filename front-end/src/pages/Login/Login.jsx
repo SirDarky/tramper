@@ -22,7 +22,7 @@ const WhiteIcon = styled(({ ...other }) => <span {...other} />)(
 );
 
 export const Login = () => {
-  const { RealizarNewLoginCliente, VerificarAntigoLogin, authentication } = useAuthContext()
+  const { RealizarNewLoginCliente, VerificarAntigoLogin, authentication, tipoUser } = useAuthContext()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState("")
@@ -56,7 +56,11 @@ export const Login = () => {
   useEffect(() => {
     VerificarAntigoLogin()
     if(authentication){
-      navigate('/home')
+      if(tipoUser === "Empresa"){
+        navigate('/homeEmpresa')
+      } else {
+        navigate("/home")
+      }
     }
   }, [authentication])
   

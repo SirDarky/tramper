@@ -170,10 +170,10 @@ router.get('/vagas', async (req,res)=>{
         if(areaAtuacao){
             const vagas = await Vagas.find({
                 areaAtuacao: areaAtuacao
-            }).where('canditados').nin([userId]).exec()
+            }).populate('empresa').where('canditados').nin([userId]).exec()
             res.json(vagas)
         }else{
-            const vagas = await Vagas.find().where('canditados').nin([userId]).exec()
+            const vagas = await Vagas.find().populate('empresa').where('canditados').nin([userId]).exec()
             res.json(vagas)
         }
     } catch (error) {
@@ -192,6 +192,17 @@ router.put('/vagas', async (req, res)=>{
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Erro ao buscar vagas' });
+    }
+})
+
+router.put('/vagas/dislike', async (req, res)=>{
+    const userId = req.userId;
+    const {vagaId} = req.body;
+    try {
+        await User.findByIdAndUpdate(userId, {$push: {vagaRejeitada: vagaId}});
+        res.status(200).json({msg: 'Tudo certo'})
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao dar dislike vagas'});
     }
 })
 

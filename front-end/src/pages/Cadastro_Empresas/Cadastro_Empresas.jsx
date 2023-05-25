@@ -91,7 +91,7 @@ export const Cadastro_Empresas = () => {
   useEffect(() => {
     VerificarAntigoLogin()
     if(authentication){
-      navigate('/home')
+      navigate('/homeEmpresa')
     }
   }, [authentication])
 

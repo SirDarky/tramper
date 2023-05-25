@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema({
     curtidas: [{type:mongoose.Schema.Types.ObjectId, ref:'User'}],
     rejeicoes: [{type:mongoose.Schema.Types.ObjectId, ref:'User'}],
     matches: [{type:mongoose.Schema.Types.ObjectId, ref:'User'}],
+    vagaRejeitada: [{type:mongoose.Schema.Types.ObjectId, ref: 'Vagas'}],
     photopaths: {type: String}
 });
 
