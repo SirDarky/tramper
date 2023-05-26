@@ -13,18 +13,18 @@ const Tela_Home_Vagas = () => {
   const [vagaAtual, setVagaAtual] = useState(0)
   const [loading, setLoading] = useState(true)
 
-  const ola = ()=>{
-    console.log(vagaAtual)
+  function request(){
+    api.get('/user/vagas').then(res=>{
+      setVagas(res.data)
+      console.log(res.data)
+    })
   }
 
   useEffect(() => {
     if(!authentication){
       navigate('/')
     }
-    api.get('/user/vagas').then(res=>{
-        setVagas(res.data)
-        console.log(res.data)
-    })
+    request()
     setLoading(false)
   }, [authentication])
 
@@ -35,6 +35,15 @@ const Tela_Home_Vagas = () => {
     }
   }, [loading])
   
+  useEffect(() => {
+    setLoading(true)
+    if(vagaAtual===vagas.length){
+      setVagaAtual(0)
+    }
+    setLoading(false)
+  }, [vagaAtual])
+  
+
 
   return (
     <div style={{display:"flex", alignItems:"center", justifyContent:"center", height:"80vh"}}>

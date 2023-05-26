@@ -169,12 +169,12 @@ router.get('/users', async (req, res)=>{
     try {
         const usuario = await User.findById(userId);
         const ignoredUsers = usuario.curtidas.concat(usuario.rejeicoes, usuario.matches);
-        const usuarios = await User.find();
+        const usuarios = await User.find({photopaths: { $exists: true, $ne: null }});
         /*
         {
             _id: { $nin: ignoredUsers },
             $and: [{ _id: { $ne: userId } }],
-            photopaths: { $exists: true, $ne: null }
+            
           }
         */
         res.status(200).json({

@@ -104,22 +104,33 @@ export const Tela_Home = () => {
   const [usuarioAtual, setUsuarioAtual] = useState(0)
   const [loading, setLoading] = useState(true)
 
-  const ola = ()=>{
-    console.log(usuarioAtual)
-  }
-
   useEffect(() => {
     if(!authentication){
       navigate('/')
     }
-    api.get('/user/users').then(res=>{
-        setUsers(res.data.users)
-        console.log(res.data.users)
-    })
+    request()
     setLoading(false)
   }, [authentication])
 
+  useEffect(() => {
+    setLoading(true)
+    if(usuarioAtual===users.length){
+      setUsuarioAtual(0)
+    }
+    setLoading(false)
+  }, [usuarioAtual])
+  
+  function request(){
+    setUsers([])
+    api.get('/user/users').then(res=>{
+      setUsers(res.data.users)
+      console.log(res.data.users)
+      console.log('oi')
+    })
+  }
+
   useEffect(()=>{
+    request()
     api.get('/user').then(res=>{
       if (!localStorage.getItem("concordou" ) && !res.data.usuario.photopaths) {
         console.log("oi")
