@@ -17,6 +17,6 @@ app.use(express.json());
 dbConnection()
 app.use(router)
 
-server.listen(3005, ()=>{
+server.listen(3006, ()=>{
     console.log("Servidor iniciado")
 })
