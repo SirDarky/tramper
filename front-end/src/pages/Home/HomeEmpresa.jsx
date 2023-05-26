@@ -26,7 +26,10 @@ const HomeEmpresa = () => {
       if(tipoUser==='User'){
           navigate('/home')
       }
-      alert('Preservamos a imagem e nomes de canditados para que não haja distinção entre eles.')
+      if (!localStorage.getItem("concordou")) {
+        alert('Preservamos a imagem e nomes de canditados para que não haja distinção entre eles.')
+        localStorage.setItem('concordou', "sim")
+      }
   }, [authentication])
 
   useEffect(() => {

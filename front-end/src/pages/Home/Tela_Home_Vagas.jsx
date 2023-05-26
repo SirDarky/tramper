@@ -1,3 +1,4 @@
+import LoadingComponent from '../../components/LoadingComponent';
 import ButtonMoviment from '../../components/homeComponents/ButtonMoviment';
 import CardVagas from '../../components/homeVaga/CardVagas';
 import { useAuthContext } from "../../context/authContext";
@@ -10,6 +11,7 @@ const Tela_Home_Vagas = () => {
   const navigate = useNavigate()
   const { authentication } = useAuthContext()
   const [vagaAtual, setVagaAtual] = useState(0)
+  const [loading, setLoading] = useState(true)
 
   const ola = ()=>{
     console.log(vagaAtual)
@@ -23,10 +25,20 @@ const Tela_Home_Vagas = () => {
         setVagas(res.data)
         console.log(res.data)
     })
+    setLoading(false)
   }, [authentication])
+
+  useEffect(() => {
+    if (!localStorage.getItem("concordou")) {
+      alert('Preservamos a imagem e nomes de canditados para que não haja distinção entre eles.')
+      localStorage.setItem('concordou', "sim")
+    }
+  }, [loading])
+  
 
   return (
     <div style={{display:"flex", alignItems:"center", justifyContent:"center", height:"80vh"}}>
+      {loading? <LoadingComponent/>:""}
       {
         vagas && vagas.length>0? 
           <CardVagas vaga={vagas[vagaAtual]} trocaVaga={setVagaAtual} prevVaga={vagaAtual} key={vagaAtual}/>: <div>

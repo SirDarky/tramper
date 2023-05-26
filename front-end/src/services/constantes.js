@@ -15,7 +15,8 @@ const areasDeAtuacao = [
     "Educação e Ensino",
     "Consultoria Empresarial",
     "Mídias Sociais",
-    "Arquitetura e Design de Interiores"
+    "Arquitetura e Design de Interiores",
+    "Tecnologia"
 ];
 
 const locations = [

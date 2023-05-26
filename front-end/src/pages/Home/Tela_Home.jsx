@@ -18,6 +18,7 @@ import Card from '../../components/homeComponents/Card'
 import { useAuthContext } from "../../context/authContext";
 import api from "../../services/api";
 import Match from "../../components/homeComponents/Match";
+import LoadingComponent from "../../components/LoadingComponent";
  
 const Usuario_Usuario = [
   {
@@ -101,6 +102,7 @@ export const Tela_Home = () => {
   const { authentication } = useAuthContext()
   const [match, setMatch] = useState(0)
   const [usuarioAtual, setUsuarioAtual] = useState(0)
+  const [loading, setLoading] = useState(true)
 
   const ola = ()=>{
     console.log(usuarioAtual)
@@ -114,10 +116,22 @@ export const Tela_Home = () => {
         setUsers(res.data.users)
         console.log(res.data.users)
     })
+    setLoading(false)
   }, [authentication])
+
+  useEffect(()=>{
+    api.get('/user').then(res=>{
+      if (!localStorage.getItem("concordou" ) && !res.data.usuario.photopaths) {
+        console.log("oi")
+        alert('Por você não possuir foto de perfil, você não aparecerá para os demais usuarios.')
+        localStorage.setItem('concordou', "sim")
+      }
+    })
+  }, [loading])
 
   return (
     <div style={{display:"flex", alignItems:"center", justifyContent:"center", height:"80vh"}}>
+      {loading? <LoadingComponent/>: ""}
       { match!=0?<Match setState={setMatch}/>:""}
       {
         users && users.length>0? 

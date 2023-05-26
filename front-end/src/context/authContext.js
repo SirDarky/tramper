@@ -57,6 +57,9 @@ export function useAuthContext(){
 
     function Deslogar() {
         if (localStorage.getItem("token") && localStorage.getItem("tipouser")) {
+            if (localStorage.getItem("concordou")) {
+                localStorage.removeItem("concordou")
+            }
             localStorage.removeItem("token")
             localStorage.removeItem("tipouser")
             localStorage.removeItem("usuario")
