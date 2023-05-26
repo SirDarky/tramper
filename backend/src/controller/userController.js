@@ -130,13 +130,13 @@ router.put('/curtidas', async (req, res)=>{
         const usuarioCurtido = await User.findById(userIdCurtido);
         const matchSpawn = usuarioCurtido.curtidas.find(e=> e.toString()===userId);
         if(matchSpawn){
-            await User.findByIdAndUpdate(userId, {$push: {matches: userIdCurtido}});
+            //await User.findByIdAndUpdate(userId, {$push: {matches: userIdCurtido}});
             res.status(200).json({
                 codigo: 1000,//significa que deu match
                 msg: "Tudo certo"
             });
         } else {
-            await User.findByIdAndUpdate(userId, {$push: {curtidas: userIdCurtido}});
+            //await User.findByIdAndUpdate(userId, {$push: {curtidas: userIdCurtido}});
             res.status(200).json({
                 msg: "Tudo certo"
             });
@@ -152,7 +152,7 @@ router.put('/rejeicoes', async(req, res)=>{
     const userId = req.userId;
     const {userIdRejeitado} = req.body;
     try{
-        await User.findByIdAndUpdate(userId, {$push: {rejeicoes: userIdRejeitado}})
+        //await User.findByIdAndUpdate(userId, {$push: {rejeicoes: userIdRejeitado}})
         res.status(200).json({
             msg: "Tudo certo"
         });
@@ -169,11 +169,14 @@ router.get('/users', async (req, res)=>{
     try {
         const usuario = await User.findById(userId);
         const ignoredUsers = usuario.curtidas.concat(usuario.rejeicoes, usuario.matches);
-        const usuarios = await User.find({
+        const usuarios = await User.find();
+        /*
+        {
             _id: { $nin: ignoredUsers },
             $and: [{ _id: { $ne: userId } }],
             photopaths: { $exists: true, $ne: null }
-          });
+          }
+        */
         res.status(200).json({
             users: usuarios
         });
@@ -190,12 +193,10 @@ router.get('/vagas', async (req,res)=>{
     try {
         if(areaAtuacao){
             const usuario = await User.findById(userId);
-            const ignoredVagas = usuario.vagaRejeitada;
+            //const ignoredVagas = usuario.vagaRejeitada;
             const vagas = await Vagas.find({
-                areaAtuacao: areaAtuacao,
-                _id: { $nin: ignoredVagas },
                 'empresa.photopath': { $exists: true, $ne: null }
-            })
+            })//_id: { $nin: ignoredVagas },
             .populate('empresa')
             .where('candidatos')
             .nin([userId])
@@ -204,8 +205,10 @@ router.get('/vagas', async (req,res)=>{
             res.json(vagasFiltradas);
         }else{
             const usuario = await User.findById(userId);
-            const ignoredVagas = usuario.vagaRejeitada;
-            const vagas = await Vagas.find({_id: { $nin: ignoredVagas }}).populate('empresa').where('canditados').nin([userId]).exec()
+            //const ignoredVagas = usuario.vagaRejeitada;
+            //{_id: { $nin: ignoredVagas }}
+            const vagas = await Vagas.find().populate('empresa').exec()
+            //                areaAtuacao: areaAtuacao,.where('canditados').nin([userId])
             const vagasFiltradas = vagas.filter(vaga => vaga.empresa.photopaths);
             res.json(vagasFiltradas);
         }
@@ -220,7 +223,7 @@ router.put('/vagas', async (req, res)=>{
     const userId = req.userId;
     const {vagaId} = req.body;
     try {
-        await Vagas.findByIdAndUpdate(vagaId, {$push: {canditados: userId}});
+        //await Vagas.findByIdAndUpdate(vagaId, {$push: {canditados: userId}});
         res.status(200).json({msg: "Tudo certo"});
     } catch (error) {
         console.error(error);
@@ -232,7 +235,7 @@ router.put('/vagas/dislike', async (req, res)=>{
     const userId = req.userId;
     const {vagaId} = req.body;
     try {
-        await User.findByIdAndUpdate(userId, {$push: {vagaRejeitada: vagaId}});
+        //await User.findByIdAndUpdate(userId, {$push: {vagaRejeitada: vagaId}});
         res.status(200).json({msg: 'Tudo certo'})
     } catch (error) {
         console.log(error)
